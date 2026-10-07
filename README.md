@@ -266,3 +266,27 @@ This repository baseline aligns with the nine PIM IV stages:
 - Project management and engineering workflow must use **SCRUM**.
 - Architecture and implementation must follow **MVC** and layered design.
 - Team coordination (6 members) should be managed through **Jira** and **Confluence**.
+
+---
+
+## 15) Local Development with GitHub Codespaces
+
+The repository includes a Dev Container with two services:
+
+- `app`: .NET 8 SDK used to build and run the solution.
+- `sqlserver`: SQL Server 2022 Developer Edition exposed on port `1433`.
+
+Before creating a Codespace, add `MSSQL_SA_PASSWORD` as a Codespaces repository secret. The
+password must meet SQL Server complexity requirements and must not be committed to the repository.
+SSMS can connect to the forwarded port using:
+
+```text
+Server: localhost,1433
+Authentication: SQL Server Authentication
+Login: sa
+Password: the value of MSSQL_SA_PASSWORD
+```
+
+The initial backend baseline is under `src/` and follows the dependency direction
+`Api -> Infrastructure -> Application -> Domain`. The current patient repository is in-memory
+until the SQL Server schema, migrations, and persistence adapters are defined.
