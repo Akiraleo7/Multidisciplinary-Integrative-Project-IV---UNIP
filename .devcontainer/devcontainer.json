@@ -1,10 +1,10 @@
 {
-  "name": "Hospital Edward Jenner Platform - C# & SQL Server",
-  "image": "://microsoft.com",
-  "containerEnv": {
-    "ACCEPT_EULA": "Y",
-    "MSSQL_SA_PASSWORD": "S4yUr1@K1r@2912@"
-  },
+  "name": "HEJ Care Suite - .NET and SQL Server",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "shutdownAction": "stopCompose",
+  "forwardPorts": [1433],
   "customizations": {
     "vscode": {
       "extensions": [
@@ -12,6 +12,5 @@
         "ms-mssql.mssql"
       ]
     }
-  },
-  "forwardPorts": [1433]
+  }
 }
