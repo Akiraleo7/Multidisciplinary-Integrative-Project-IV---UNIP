@@ -288,9 +288,17 @@ Password: the value of MSSQL_SA_PASSWORD
 ```
 
 The initial backend baseline is under `src/` and follows the dependency direction
-`Api -> Infrastructure -> Application -> Domain`. The current patient repository is in-memory
-until the SQL Server schema, migrations, and persistence adapters are defined.
+`Api -> Infrastructure -> Application -> Domain`. Patient data is persisted in SQL Server
+through the connection string supplied to the app container by Docker Compose.
 
 The first SQL Server schema is available at `database/001_initial_schema.sql`. Execute it in
 SSMS after connecting to the Codespace SQL Server. It creates the `HEJCareSuite` database,
 `Patient`, `AuditLog`, and `SchemaVersion` tables, plus the patient audit trigger.
+
+Project decisions and implementation evidence are maintained in:
+
+- `docs/architecture-and-decisions.md`
+- `docs/development-log.md`
+
+These documents are updated throughout development and will provide the technical basis
+for the final academic report. Secrets and passwords must never be recorded in them.

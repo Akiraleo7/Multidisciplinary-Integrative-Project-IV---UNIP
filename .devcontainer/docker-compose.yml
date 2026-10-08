@@ -2,6 +2,8 @@ services:
   app:
     image: mcr.microsoft.com/devcontainers/dotnet:8.0
     command: sleep infinity
+    environment:
+      ConnectionStrings__SqlServer: "Server=sqlserver,1433;Database=HEJCareSuite;User Id=sa;Password=${MSSQL_SA_PASSWORD:?Set MSSQL_SA_PASSWORD as a Codespaces secret};TrustServerCertificate=True;Encrypt=False"
     volumes:
       - ..:/workspaces/${LOCAL_WORKSPACE_FOLDER_BASENAME}:cached
     depends_on:

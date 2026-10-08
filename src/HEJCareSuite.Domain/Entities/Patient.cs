@@ -21,6 +21,22 @@ public sealed class Patient
         CreatedAtUtc = DateTime.UtcNow;
     }
 
+    public static Patient Rehydrate(
+        Guid id,
+        string fullName,
+        DateOnly birthDate,
+        string documentNumber,
+        DateTime createdAtUtc)
+    {
+        var patient = new Patient(fullName, birthDate, documentNumber)
+        {
+            Id = id,
+            CreatedAtUtc = createdAtUtc
+        };
+
+        return patient;
+    }
+
     public Guid Id { get; private set; }
     public string FullName { get; private set; } = string.Empty;
     public DateOnly BirthDate { get; private set; }
