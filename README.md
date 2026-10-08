@@ -294,3 +294,11 @@ through the connection string supplied to the app container by Docker Compose.
 The first SQL Server schema is available at `database/001_initial_schema.sql`. Execute it in
 SSMS after connecting to the Codespace SQL Server. It creates the `HEJCareSuite` database,
 `Patient`, `AuditLog`, and `SchemaVersion` tables, plus the patient audit trigger.
+
+Project decisions and implementation evidence are maintained in:
+
+- `docs/architecture-and-decisions.md`
+- `docs/development-log.md`
+
+These documents are updated throughout development and will provide the technical basis
+for the final academic report. Secrets and passwords must never be recorded in them.
