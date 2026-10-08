@@ -4,7 +4,12 @@ using HEJCareSuite.Infrastructure.Patients;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services.AddSingleton<IPatientRepository, InMemoryPatientRepository>();
+var sqlServerConnectionString = builder.Configuration.GetConnectionString("SqlServer")
+    ?? throw new InvalidOperationException(
+        "The SqlServer connection string is not configured.");
+
+builder.Services.AddSingleton<IPatientRepository>(
+    new SqlPatientRepository(sqlServerConnectionString));
 builder.Services.AddScoped<RegisterPatient>();
 
 var app = builder.Build();
