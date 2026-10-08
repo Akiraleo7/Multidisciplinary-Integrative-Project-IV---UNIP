@@ -290,3 +290,7 @@ Password: the value of MSSQL_SA_PASSWORD
 The initial backend baseline is under `src/` and follows the dependency direction
 `Api -> Infrastructure -> Application -> Domain`. The current patient repository is in-memory
 until the SQL Server schema, migrations, and persistence adapters are defined.
+
+The first SQL Server schema is available at `database/001_initial_schema.sql`. Execute it in
+SSMS after connecting to the Codespace SQL Server. It creates the `HEJCareSuite` database,
+`Patient`, `AuditLog`, and `SchemaVersion` tables, plus the patient audit trigger.
