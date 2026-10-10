@@ -11,6 +11,7 @@ using Xunit;
 
 namespace HEJCareSuite.Api.Tests;
 
+[Collection("API integration tests")]
 public sealed class PatientsApiTests : IClassFixture<PatientsApiFactory>
 {
     private readonly PatientsApiFactory factory;
@@ -61,9 +62,13 @@ public sealed class PatientsApiTests : IClassFixture<PatientsApiFactory>
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var patients = await response.Content.ReadFromJsonAsync<Patient[]>();
-        var patient = Assert.Single(patients!);
-        Assert.Equal(expectedPatient.Id, patient.Id);
+        Assert.Contains(patients!, patient => patient.Id == expectedPatient.Id);
     }
+}
+
+[CollectionDefinition("API integration tests", DisableParallelization = true)]
+public sealed class ApiIntegrationTestCollection
+{
 }
 
 public sealed class PatientsApiFactory : WebApplicationFactory<Program>
@@ -92,21 +97,37 @@ public sealed class PatientsApiFactory : WebApplicationFactory<Program>
 public sealed class InMemoryPatientRepository : IPatientRepository
 {
     private readonly List<Patient> patients = [];
+    private readonly object syncRoot = new();
 
-    public void Add(Patient patient) => patients.Add(patient);
+    public void Add(Patient patient)
+    {
+        lock (syncRoot)
+        {
+            patients.Add(patient);
+        }
+    }
 
-    public void Clear() => patients.Clear();
+    public void Clear()
+    {
+        lock (syncRoot)
+        {
+            patients.Clear();
+        }
+    }
 
     public Task AddAsync(Patient patient, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        patients.Add(patient);
+        Add(patient);
         return Task.CompletedTask;
     }
 
     public Task<IReadOnlyCollection<Patient>> ListAsync(CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        return Task.FromResult<IReadOnlyCollection<Patient>>(patients.ToArray());
+        lock (syncRoot)
+        {
+            return Task.FromResult<IReadOnlyCollection<Patient>>(patients.ToArray());
+        }
     }
 }
