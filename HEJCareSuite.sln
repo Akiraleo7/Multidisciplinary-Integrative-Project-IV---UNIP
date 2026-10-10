@@ -10,6 +10,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HEJCareSuite.Infrastructure
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HEJCareSuite.Api", "src\HEJCareSuite.Api\HEJCareSuite.Api.csproj", "{D4E5F6A7-B8C9-40D1-2345-678901234567}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HEJCareSuite.Domain.Tests", "tests\HEJCareSuite.Domain.Tests\HEJCareSuite.Domain.Tests.csproj", "{E5F6A7B8-C9D0-41E2-3456-789012345678}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HEJCareSuite.Application.Tests", "tests\HEJCareSuite.Application.Tests\HEJCareSuite.Application.Tests.csproj", "{F6A7B8C9-D0E1-42F3-4567-890123456789}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,5 +36,13 @@ Global
 		{D4E5F6A7-B8C9-40D1-2345-678901234567}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4E5F6A7-B8C9-40D1-2345-678901234567}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4E5F6A7-B8C9-40D1-2345-678901234567}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5F6A7B8-C9D0-41E2-3456-789012345678}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5F6A7B8-C9D0-41E2-3456-789012345678}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5F6A7B8-C9D0-41E2-3456-789012345678}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5F6A7B8-C9D0-41E2-3456-789012345678}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6A7B8C9-D0E1-42F3-4567-890123456789}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6A7B8C9-D0E1-42F3-4567-890123456789}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6A7B8C9-D0E1-42F3-4567-890123456789}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6A7B8C9-D0E1-42F3-4567-890123456789}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
