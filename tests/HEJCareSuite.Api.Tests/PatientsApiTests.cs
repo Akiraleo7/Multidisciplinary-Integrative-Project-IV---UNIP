@@ -56,7 +56,11 @@ public sealed class PatientsApiTests
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var patients = await response.Content.ReadFromJsonAsync<Patient[]>();
-        Assert.Contains(patients!, patient => patient.Id == expectedPatient.Id);
+        Assert.Contains(
+            patients!,
+            patient => patient.DocumentNumber == expectedPatient.DocumentNumber
+                && patient.FullName == expectedPatient.FullName
+                && patient.BirthDate == expectedPatient.BirthDate);
     }
 }
 
