@@ -1,4 +1,6 @@
 using HEJCareSuite.Application.Patients;
+using HEJCareSuite.Api.Contracts.Patients;
+using HEJCareSuite.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HEJCareSuite.Api.Controllers;
@@ -12,7 +14,7 @@ public sealed class PatientsController(RegisterPatient registerPatient, IPatient
     public async Task<IActionResult> List(CancellationToken cancellationToken)
     {
         var patients = await patientRepository.ListAsync(cancellationToken);
-        return Ok(patients);
+        return Ok(patients.Select(ToResponse));
     }
 
     [HttpPost]
@@ -21,6 +23,9 @@ public sealed class PatientsController(RegisterPatient registerPatient, IPatient
         CancellationToken cancellationToken)
     {
         var patient = await registerPatient.ExecuteAsync(command, cancellationToken);
-        return CreatedAtAction(nameof(List), new { id = patient.Id }, patient);
+        return CreatedAtAction(nameof(List), new { id = patient.Id }, ToResponse(patient));
     }
+
+    private static PatientResponse ToResponse(Patient patient) =>
+        new(patient.Id, patient.FullName, patient.BirthDate, patient.DocumentNumber, patient.CreatedAtUtc);
 }
