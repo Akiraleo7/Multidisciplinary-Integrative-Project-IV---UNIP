@@ -56,3 +56,5 @@ The following evidence should be retained for the final report:
 - Tests follow Arrange-Act-Assert structure and can run with `dotnet test`.
 - Added API integration tests using `WebApplicationFactory` and an isolated repository
   test double for the HTTP patient contract.
+- Fixed the API test project imports and test-double visibility so the full solution
+  compiles in the Codespace.
