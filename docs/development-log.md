@@ -54,3 +54,5 @@ The following evidence should be retained for the final report:
 - Added tests for patient validation, normalization, identity creation, and registration.
 - Kept Application tests independent of SQL Server by using an in-memory test double.
 - Tests follow Arrange-Act-Assert structure and can run with `dotnet test`.
+- Added API integration tests using `WebApplicationFactory` and an isolated repository
+  test double for the HTTP patient contract.
