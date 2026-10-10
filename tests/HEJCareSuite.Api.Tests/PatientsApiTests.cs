@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using HEJCareSuite.Api.Contracts.Patients;
 using HEJCareSuite.Application.Patients;
 using HEJCareSuite.Domain.Entities;
 using Microsoft.AspNetCore.Hosting;
@@ -30,7 +31,7 @@ public sealed class PatientsApiTests
 
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        var patient = await response.Content.ReadFromJsonAsync<Patient>();
+        var patient = await response.Content.ReadFromJsonAsync<PatientResponse>();
         Assert.NotNull(patient);
         Assert.Equal(request.FullName, patient.FullName);
         Assert.Equal(request.BirthDate, patient.BirthDate);
@@ -55,7 +56,7 @@ public sealed class PatientsApiTests
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var patients = await response.Content.ReadFromJsonAsync<Patient[]>();
+        var patients = await response.Content.ReadFromJsonAsync<PatientResponse[]>();
         Assert.Contains(
             patients!,
             patient => patient.DocumentNumber == expectedPatient.DocumentNumber

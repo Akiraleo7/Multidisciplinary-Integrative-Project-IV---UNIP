@@ -31,6 +31,8 @@ API -> Infrastructure -> Application -> Domain
 - **Application** contains use cases and repository contracts.
 - **Infrastructure** implements database access and external technical concerns.
 - **API** exposes HTTP endpoints and composes the application.
+- **API contracts** use response DTOs so HTTP payloads do not expose domain entities
+  directly.
 
 ## Decisions and rationale
 
