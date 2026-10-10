@@ -47,3 +47,10 @@ The following evidence should be retained for the final report:
 4. Initial schema script and successful execution result.
 5. API requests and responses for patient registration and listing.
 6. Pull Request and commit history for each coherent increment.
+
+## 2026-10-10 - Unit testing baseline
+
+- Added xUnit projects for the Domain and Application layers.
+- Added tests for patient validation, normalization, identity creation, and registration.
+- Kept Application tests independent of SQL Server by using an in-memory test double.
+- Tests follow Arrange-Act-Assert structure and can run with `dotnet test`.
