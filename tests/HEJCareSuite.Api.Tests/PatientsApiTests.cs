@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Xunit;
 
 namespace HEJCareSuite.Api.Tests;
 
@@ -67,7 +68,7 @@ public sealed class PatientsApiTests : IClassFixture<PatientsApiFactory>
 
 public sealed class PatientsApiFactory : WebApplicationFactory<Program>
 {
-    public InMemoryPatientRepository Repository { get; } = new();
+    internal InMemoryPatientRepository Repository { get; } = new();
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -88,7 +89,7 @@ public sealed class PatientsApiFactory : WebApplicationFactory<Program>
     }
 }
 
-internal sealed class InMemoryPatientRepository : IPatientRepository
+public sealed class InMemoryPatientRepository : IPatientRepository
 {
     private readonly List<Patient> patients = [];
 
