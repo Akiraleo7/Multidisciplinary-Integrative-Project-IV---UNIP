@@ -11,22 +11,14 @@ using Xunit;
 
 namespace HEJCareSuite.Api.Tests;
 
-[Collection("API integration tests")]
-public sealed class PatientsApiTests : IClassFixture<PatientsApiFactory>
+public sealed class PatientsApiTests
 {
-    private readonly PatientsApiFactory factory;
-    private readonly HttpClient client;
-
-    public PatientsApiTests(PatientsApiFactory factory)
-    {
-        this.factory = factory;
-        client = factory.CreateClient();
-    }
-
     [Fact]
     public async Task PostPatients_ValidRequest_ReturnsCreatedPatient()
     {
         // Arrange
+        await using var factory = new PatientsApiFactory();
+        using var client = factory.CreateClient();
         factory.Repository.Clear();
         var request = new RegisterPatientCommand(
             "Maria Silva",
@@ -49,6 +41,8 @@ public sealed class PatientsApiTests : IClassFixture<PatientsApiFactory>
     public async Task GetPatients_RepositoryContainsPatient_ReturnsOkWithPatient()
     {
         // Arrange
+        await using var factory = new PatientsApiFactory();
+        using var client = factory.CreateClient();
         factory.Repository.Clear();
         var expectedPatient = new Patient(
             "Joao Souza",
@@ -64,11 +58,6 @@ public sealed class PatientsApiTests : IClassFixture<PatientsApiFactory>
         var patients = await response.Content.ReadFromJsonAsync<Patient[]>();
         Assert.Contains(patients!, patient => patient.Id == expectedPatient.Id);
     }
-}
-
-[CollectionDefinition("API integration tests", DisableParallelization = true)]
-public sealed class ApiIntegrationTestCollection
-{
 }
 
 public sealed class PatientsApiFactory : WebApplicationFactory<Program>

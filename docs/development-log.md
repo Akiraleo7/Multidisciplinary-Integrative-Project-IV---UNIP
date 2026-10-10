@@ -58,3 +58,5 @@ The following evidence should be retained for the final report:
   test double for the HTTP patient contract.
 - Fixed the API test project imports and test-double visibility so the full solution
   compiles in the Codespace.
+- Isolated each API integration test in its own `WebApplicationFactory` instance to
+  prevent shared fixture state from affecting assertions.
