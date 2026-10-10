@@ -17,7 +17,7 @@ public sealed class PatientsApiTests
     public async Task PostPatients_ValidRequest_ReturnsCreatedPatient()
     {
         // Arrange
-        await using var factory = new PatientsApiFactory();
+        using var factory = new PatientsApiFactory();
         using var client = factory.CreateClient();
         factory.Repository.Clear();
         var request = new RegisterPatientCommand(
@@ -41,7 +41,7 @@ public sealed class PatientsApiTests
     public async Task GetPatients_RepositoryContainsPatient_ReturnsOkWithPatient()
     {
         // Arrange
-        await using var factory = new PatientsApiFactory();
+        using var factory = new PatientsApiFactory();
         using var client = factory.CreateClient();
         factory.Repository.Clear();
         var expectedPatient = new Patient(
