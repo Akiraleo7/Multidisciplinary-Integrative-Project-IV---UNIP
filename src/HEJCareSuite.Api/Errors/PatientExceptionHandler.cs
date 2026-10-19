@@ -23,18 +23,19 @@ public sealed class PatientExceptionHandler(
                 Type = "https://httpstatuses.com/400"
             };
 
-            return await problemDetailsService.WriteAsync(
+            await problemDetailsService.WriteAsync(
                 new ProblemDetailsContext
                 {
                     HttpContext = httpContext,
                     ProblemDetails = problem,
                     Exception = exception
                 });
+            return true;
         }
 
         logger.LogError(exception, "Unhandled API exception.");
         httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
-        return await problemDetailsService.WriteAsync(
+        await problemDetailsService.WriteAsync(
             new ProblemDetailsContext
             {
                 HttpContext = httpContext,
@@ -46,5 +47,6 @@ public sealed class PatientExceptionHandler(
                 },
                 Exception = exception
             });
+        return true;
     }
 }
