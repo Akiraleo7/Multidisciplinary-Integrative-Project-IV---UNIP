@@ -74,3 +74,5 @@ The following evidence should be retained for the final report:
   them with a generic client-side error.
 - Added patient update support across Domain, Application, SQL persistence, API, and
   the web interface, including an integration test for `PUT /api/v1/patients/{id}`.
+- Completed the patient CRUD slice with audited deletion through
+  `DELETE /api/v1/patients/{id}` and a confirmation action in the web interface.

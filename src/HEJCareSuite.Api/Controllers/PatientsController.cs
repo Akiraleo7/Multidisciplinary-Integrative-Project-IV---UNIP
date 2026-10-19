@@ -10,6 +10,7 @@ namespace HEJCareSuite.Api.Controllers;
 public sealed class PatientsController(
     RegisterPatient registerPatient,
     UpdatePatient updatePatient,
+    DeletePatient deletePatient,
     IPatientRepository patientRepository)
     : ControllerBase
 {
@@ -44,6 +45,13 @@ public sealed class PatientsController(
             cancellationToken);
 
         return updated ? NoContent() : NotFound();
+    }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+    {
+        var deleted = await deletePatient.ExecuteAsync(id, cancellationToken);
+        return deleted ? NoContent() : NotFound();
     }
 
     private static PatientResponse ToResponse(Patient patient) =>

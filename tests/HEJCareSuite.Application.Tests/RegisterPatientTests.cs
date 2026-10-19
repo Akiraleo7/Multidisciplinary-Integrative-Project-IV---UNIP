@@ -73,6 +73,12 @@ public sealed class RegisterPatientTests
             return Task.FromResult(true);
         }
 
+        public Task<bool> DeleteAsync(Guid patientId, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return Task.FromResult(patients.RemoveAll(patient => patient.Id == patientId) > 0);
+        }
+
         public Task<IReadOnlyCollection<Patient>> ListAsync(
             CancellationToken cancellationToken)
         {

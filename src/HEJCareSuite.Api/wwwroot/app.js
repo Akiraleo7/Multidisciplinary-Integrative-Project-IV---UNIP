@@ -19,8 +19,12 @@ async function loadPatients() {
       const item = document.createElement("li");
       item.innerHTML = `<strong>${escapeHtml(patient.fullName)}</strong>
         <span>${patient.birthDate} · ${escapeHtml(patient.documentNumber)}</span>
-        <button class="edit-button" type="button">Edit</button>`;
+        <span class="patient-actions">
+          <button class="edit-button" type="button">Edit</button>
+          <button class="delete-button" type="button">Delete</button>
+        </span>`;
       item.querySelector(".edit-button").addEventListener("click", () => beginEdit(patient));
+      item.querySelector(".delete-button").addEventListener("click", () => deletePatient(patient));
       patientList.append(item);
     });
     listStatus.textContent = patients.length ? "" : "No patients registered yet.";
@@ -73,6 +77,22 @@ function endEdit() {
   formTitle.textContent = "Register patient";
   submitButton.textContent = "Save patient";
   cancelButton.classList.add("hidden");
+}
+
+async function deletePatient(patient) {
+  if (!window.confirm(`Delete ${patient.fullName}?`)) return;
+  try {
+    const response = await fetch(`/api/v1/patients/${patient.id}`, { method: "DELETE" });
+    if (!response.ok) throw await readApiError(response, "Could not delete patient.");
+    if (editingPatientId === patient.id) {
+      form.reset();
+      endEdit();
+    }
+    await loadPatients();
+  } catch (error) {
+    listStatus.textContent = error.message;
+    listStatus.classList.add("error");
+  }
 }
 
 function escapeHtml(value) {

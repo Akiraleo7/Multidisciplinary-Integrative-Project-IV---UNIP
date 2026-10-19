@@ -35,4 +35,10 @@ public sealed class InMemoryPatientRepository : IPatientRepository
         patient.UpdateDetails(fullName, birthDate, documentNumber);
         return Task.FromResult(true);
     }
+
+    public Task<bool> DeleteAsync(Guid patientId, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.FromResult(patients.TryRemove(patientId, out _));
+    }
 }
