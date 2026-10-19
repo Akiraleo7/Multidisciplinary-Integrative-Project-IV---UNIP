@@ -57,6 +57,22 @@ public sealed class RegisterPatientTests
             return Task.CompletedTask;
         }
 
+        public Task<bool> UpdateAsync(
+            Guid patientId,
+            string fullName,
+            DateOnly birthDate,
+            string documentNumber,
+            CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var patient = patients.SingleOrDefault(candidate => candidate.Id == patientId);
+            if (patient is null)
+                return Task.FromResult(false);
+
+            patient.UpdateDetails(fullName, birthDate, documentNumber);
+            return Task.FromResult(true);
+        }
+
         public Task<IReadOnlyCollection<Patient>> ListAsync(
             CancellationToken cancellationToken)
         {

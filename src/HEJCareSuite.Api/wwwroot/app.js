@@ -2,6 +2,10 @@ const form = document.querySelector("#patient-form");
 const formStatus = document.querySelector("#form-status");
 const listStatus = document.querySelector("#list-status");
 const patientList = document.querySelector("#patient-list");
+const formTitle = document.querySelector("#form-title");
+const submitButton = document.querySelector("#submit-button");
+const cancelButton = document.querySelector("#cancel-button");
+let editingPatientId = null;
 
 async function loadPatients() {
   listStatus.textContent = "Loading patients...";
@@ -14,7 +18,9 @@ async function loadPatients() {
     patients.forEach((patient) => {
       const item = document.createElement("li");
       item.innerHTML = `<strong>${escapeHtml(patient.fullName)}</strong>
-        <span>${patient.birthDate} · ${escapeHtml(patient.documentNumber)}</span>`;
+        <span>${patient.birthDate} · ${escapeHtml(patient.documentNumber)}</span>
+        <button class="edit-button" type="button">Edit</button>`;
+      item.querySelector(".edit-button").addEventListener("click", () => beginEdit(patient));
       patientList.append(item);
     });
     listStatus.textContent = patients.length ? "" : "No patients registered yet.";
@@ -30,14 +36,17 @@ form.addEventListener("submit", async (event) => {
   formStatus.classList.remove("error");
   const data = Object.fromEntries(new FormData(form));
   try {
-    const response = await fetch("/api/v1/patients", {
-      method: "POST",
+    const response = await fetch(
+      editingPatientId ? `/api/v1/patients/${editingPatientId}` : "/api/v1/patients",
+      {
+      method: editingPatientId ? "PUT" : "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
-    });
+      });
     if (!response.ok) throw await readApiError(response, "Could not save patient.");
     form.reset();
-    formStatus.textContent = "Patient registered.";
+    formStatus.textContent = editingPatientId ? "Patient updated." : "Patient registered.";
+    endEdit();
     await loadPatients();
   } catch (error) {
     formStatus.textContent = error.message;
@@ -46,6 +55,25 @@ form.addEventListener("submit", async (event) => {
 });
 
 document.querySelector("#refresh-button").addEventListener("click", loadPatients);
+cancelButton.addEventListener("click", endEdit);
+
+function beginEdit(patient) {
+  editingPatientId = patient.id;
+  form.elements.fullName.value = patient.fullName;
+  form.elements.birthDate.value = patient.birthDate;
+  form.elements.documentNumber.value = patient.documentNumber;
+  formTitle.textContent = "Edit patient";
+  submitButton.textContent = "Update patient";
+  cancelButton.classList.remove("hidden");
+  form.elements.fullName.focus();
+}
+
+function endEdit() {
+  editingPatientId = null;
+  formTitle.textContent = "Register patient";
+  submitButton.textContent = "Save patient";
+  cancelButton.classList.add("hidden");
+}
 
 function escapeHtml(value) {
   return value.replace(/[&<>"']/g, (character) => ({

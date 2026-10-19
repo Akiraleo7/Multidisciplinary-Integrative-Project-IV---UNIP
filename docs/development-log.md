@@ -72,3 +72,5 @@ The following evidence should be retained for the final report:
   validation errors.
 - Updated the web slice to display API ProblemDetails messages instead of replacing
   them with a generic client-side error.
+- Added patient update support across Domain, Application, SQL persistence, API, and
+  the web interface, including an integration test for `PUT /api/v1/patients/{id}`.

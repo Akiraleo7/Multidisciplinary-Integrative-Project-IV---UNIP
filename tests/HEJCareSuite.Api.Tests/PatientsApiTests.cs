@@ -84,6 +84,28 @@ public sealed class PatientsApiTests
         Assert.NotNull(problem);
         Assert.Equal("Invalid patient data.", problem.Title);
     }
+
+    [Fact]
+    public async Task PutPatients_ExistingPatient_UpdatesPatient()
+    {
+        using var factory = new PatientsApiFactory();
+        using var client = factory.CreateClient();
+        var patient = new Patient("Maria Silva", new DateOnly(1990, 5, 20), "old-document");
+        factory.Repository.Add(patient);
+
+        var request = new RegisterPatientRequest(
+            "Maria Santos",
+            new DateOnly(1991, 6, 21),
+            "new-document");
+
+        var response = await client.PutAsJsonAsync($"/api/v1/patients/{patient.Id}", request);
+
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+        var updated = Assert.Single(await factory.Repository.ListAsync(CancellationToken.None));
+        Assert.Equal(request.FullName, updated.FullName);
+        Assert.Equal(request.BirthDate, updated.BirthDate);
+        Assert.Equal(request.DocumentNumber, updated.DocumentNumber);
+    }
 }
 
 public sealed record ProblemDetailsResponse(string? Title, string? Detail);
@@ -137,6 +159,25 @@ public sealed class InMemoryPatientRepository : IPatientRepository
         cancellationToken.ThrowIfCancellationRequested();
         Add(patient);
         return Task.CompletedTask;
+    }
+
+    public Task<bool> UpdateAsync(
+        Guid patientId,
+        string fullName,
+        DateOnly birthDate,
+        string documentNumber,
+        CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        lock (syncRoot)
+        {
+            var patient = patients.SingleOrDefault(candidate => candidate.Id == patientId);
+            if (patient is null)
+                return Task.FromResult(false);
+
+            patient.UpdateDetails(fullName, birthDate, documentNumber);
+            return Task.FromResult(true);
+        }
     }
 
     public Task<IReadOnlyCollection<Patient>> ListAsync(CancellationToken cancellationToken)

@@ -42,4 +42,17 @@ public sealed class Patient
     public DateOnly BirthDate { get; private set; }
     public string DocumentNumber { get; private set; } = string.Empty;
     public DateTime CreatedAtUtc { get; private set; }
+
+    public void UpdateDetails(string fullName, DateOnly birthDate, string documentNumber)
+    {
+        if (string.IsNullOrWhiteSpace(fullName))
+            throw new ArgumentException("Patient full name is required.", nameof(fullName));
+
+        if (string.IsNullOrWhiteSpace(documentNumber))
+            throw new ArgumentException("Patient document number is required.", nameof(documentNumber));
+
+        FullName = fullName.Trim();
+        BirthDate = birthDate;
+        DocumentNumber = documentNumber.Trim();
+    }
 }

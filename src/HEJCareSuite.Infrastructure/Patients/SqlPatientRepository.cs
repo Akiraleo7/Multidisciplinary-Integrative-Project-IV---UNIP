@@ -55,4 +55,32 @@ public sealed class SqlPatientRepository(string connectionString) : IPatientRepo
 
         return patients;
     }
+
+    public async Task<bool> UpdateAsync(
+        Guid patientId,
+        string fullName,
+        DateOnly birthDate,
+        string documentNumber,
+        CancellationToken cancellationToken)
+    {
+        await using var connection = new SqlConnection(connectionString);
+        await connection.OpenAsync(cancellationToken);
+
+        const string commandText = """
+            UPDATE dbo.Patient
+            SET FullName = @FullName,
+                BirthDate = @BirthDate,
+                DocumentNumber = @DocumentNumber,
+                UpdatedAtUtc = SYSUTCDATETIME()
+            WHERE PatientId = @PatientId;
+            """;
+
+        await using var command = new SqlCommand(commandText, connection);
+        command.Parameters.AddWithValue("@PatientId", patientId);
+        command.Parameters.AddWithValue("@FullName", fullName);
+        command.Parameters.AddWithValue("@BirthDate", birthDate.ToDateTime(TimeOnly.MinValue));
+        command.Parameters.AddWithValue("@DocumentNumber", documentNumber);
+
+        return await command.ExecuteNonQueryAsync(cancellationToken) > 0;
+    }
 }

@@ -7,7 +7,10 @@ namespace HEJCareSuite.Api.Controllers;
 
 [ApiController]
 [Route("api/v1/patients")]
-public sealed class PatientsController(RegisterPatient registerPatient, IPatientRepository patientRepository)
+public sealed class PatientsController(
+    RegisterPatient registerPatient,
+    UpdatePatient updatePatient,
+    IPatientRepository patientRepository)
     : ControllerBase
 {
     [HttpGet]
@@ -28,6 +31,19 @@ public sealed class PatientsController(RegisterPatient registerPatient, IPatient
             request.DocumentNumber);
         var patient = await registerPatient.ExecuteAsync(command, cancellationToken);
         return CreatedAtAction(nameof(List), new { id = patient.Id }, ToResponse(patient));
+    }
+
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> Update(
+        Guid id,
+        RegisterPatientRequest request,
+        CancellationToken cancellationToken)
+    {
+        var updated = await updatePatient.ExecuteAsync(
+            new UpdatePatientCommand(id, request.FullName, request.BirthDate, request.DocumentNumber),
+            cancellationToken);
+
+        return updated ? NoContent() : NotFound();
     }
 
     private static PatientResponse ToResponse(Patient patient) =>
