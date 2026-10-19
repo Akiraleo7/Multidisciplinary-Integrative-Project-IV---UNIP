@@ -36,6 +36,8 @@ API -> Infrastructure -> Application -> Domain
 - **Web delivery** starts with a static responsive slice served by ASP.NET Core,
   keeping the first frontend increment aligned with the existing API without adding
   a second build toolchain prematurely.
+- **API errors** use RFC 7807-style ProblemDetails. Known domain validation errors
+  return HTTP 400; unexpected errors are logged and return a generic HTTP 500 response.
 
 ## Decisions and rationale
 
