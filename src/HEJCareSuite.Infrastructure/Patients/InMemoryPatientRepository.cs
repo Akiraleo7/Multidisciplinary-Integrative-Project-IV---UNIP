@@ -20,4 +20,19 @@ public sealed class InMemoryPatientRepository : IPatientRepository
         cancellationToken.ThrowIfCancellationRequested();
         return Task.FromResult<IReadOnlyCollection<Patient>>(patients.Values.ToArray());
     }
+
+    public Task<bool> UpdateAsync(
+        Guid patientId,
+        string fullName,
+        DateOnly birthDate,
+        string documentNumber,
+        CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        if (!patients.TryGetValue(patientId, out var patient))
+            return Task.FromResult(false);
+
+        patient.UpdateDetails(fullName, birthDate, documentNumber);
+        return Task.FromResult(true);
+    }
 }

@@ -16,7 +16,7 @@
 
     <section class="grid" aria-label="Patient management">
       <form id="patient-form" class="card">
-        <h2>Register patient</h2>
+        <h2 id="form-title">Register patient</h2>
         <label>
           Full name
           <input name="fullName" required maxlength="200" autocomplete="name">
@@ -29,7 +29,8 @@
           Document number
           <input name="documentNumber" required maxlength="40">
         </label>
-        <button type="submit">Save patient</button>
+        <button id="submit-button" type="submit">Save patient</button>
+        <button id="cancel-button" class="secondary hidden" type="button">Cancel edit</button>
         <p id="form-status" class="status" role="status"></p>
       </form>
 

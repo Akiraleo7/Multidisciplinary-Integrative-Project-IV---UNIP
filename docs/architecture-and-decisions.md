@@ -40,6 +40,8 @@ API -> Infrastructure -> Application -> Domain
   return HTTP 400; unexpected errors are logged and return a generic HTTP 500 response.
 - **Frontend errors** preserve the API's ProblemDetails `detail` or `title` when
   presenting a failure to the user, with a generic fallback only for malformed responses.
+- **Patient updates** use a `PUT` endpoint with a no-content success response; the
+  frontend reuses the registration form to avoid duplicate UI flows.
 
 ## Decisions and rationale
 

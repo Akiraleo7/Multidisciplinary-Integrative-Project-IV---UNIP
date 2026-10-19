@@ -14,6 +14,7 @@ var sqlServerConnectionString = builder.Configuration.GetConnectionString("SqlSe
 builder.Services.AddSingleton<IPatientRepository>(
     new SqlPatientRepository(sqlServerConnectionString));
 builder.Services.AddScoped<RegisterPatient>();
+builder.Services.AddScoped<UpdatePatient>();
 
 var app = builder.Build();
 
