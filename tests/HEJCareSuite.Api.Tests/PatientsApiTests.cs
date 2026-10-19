@@ -106,6 +106,20 @@ public sealed class PatientsApiTests
         Assert.Equal(request.BirthDate, updated.BirthDate);
         Assert.Equal(request.DocumentNumber, updated.DocumentNumber);
     }
+
+    [Fact]
+    public async Task DeletePatients_ExistingPatient_RemovesPatient()
+    {
+        using var factory = new PatientsApiFactory();
+        using var client = factory.CreateClient();
+        var patient = new Patient("Maria Silva", new DateOnly(1990, 5, 20), "delete-document");
+        factory.Repository.Add(patient);
+
+        var response = await client.DeleteAsync($"/api/v1/patients/{patient.Id}");
+
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+        Assert.Empty(await factory.Repository.ListAsync(CancellationToken.None));
+    }
 }
 
 public sealed record ProblemDetailsResponse(string? Title, string? Detail);
@@ -177,6 +191,15 @@ public sealed class InMemoryPatientRepository : IPatientRepository
 
             patient.UpdateDetails(fullName, birthDate, documentNumber);
             return Task.FromResult(true);
+        }
+    }
+
+    public Task<bool> DeleteAsync(Guid patientId, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        lock (syncRoot)
+        {
+            return Task.FromResult(patients.RemoveAll(patient => patient.Id == patientId) > 0);
         }
     }
 

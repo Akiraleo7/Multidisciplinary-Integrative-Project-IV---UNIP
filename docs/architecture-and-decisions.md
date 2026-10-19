@@ -42,6 +42,8 @@ API -> Infrastructure -> Application -> Domain
   presenting a failure to the user, with a generic fallback only for malformed responses.
 - **Patient updates** use a `PUT` endpoint with a no-content success response; the
   frontend reuses the registration form to avoid duplicate UI flows.
+- **Patient deletion** uses a `DELETE` endpoint with confirmation in the web UI;
+  the existing SQL trigger preserves the audit trail.
 
 ## Decisions and rationale
 

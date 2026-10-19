@@ -1,6 +1,6 @@
 :root {
   color-scheme: light;
-  font-family: Inter, system-ui, sans-serif;
+  font-family: "Trebuchet MS", system-ui, sans-serif;
   color: #172033;
   background: #eef3f8;
 }
@@ -24,9 +24,11 @@ button.secondary { color: #157f86; background: #e1f1f2; }
 .status { min-height: 1.5rem; color: #536176; }
 .status.error { color: #b42318; }
 .patient-list { display: grid; gap: .75rem; padding: 0; list-style: none; }
-.patient-list li { border-left: 4px solid #157f86; background: #f6f9fb; padding: .8rem 1rem; }
+.patient-list li { border: 1px solid #dce4ed; background: #f6f9fb; padding: .8rem 1rem; }
 .patient-list strong, .patient-list span { display: block; }
 .patient-list span { color: #536176; font-size: .9rem; margin-top: .25rem; }
-.patient-list .edit-button { margin-top: .65rem; padding: .45rem .7rem; font-size: .85rem; }
+.patient-actions { display: flex; gap: .5rem; margin-top: .65rem; }
+.patient-list .edit-button, .patient-list .delete-button { padding: .45rem .7rem; font-size: .85rem; }
+.patient-list .delete-button { background: #b42318; }
 .hidden { display: none; }
 @media (max-width: 720px) { .shell { padding-top: 2rem; } .grid { grid-template-columns: 1fr; } }

@@ -83,4 +83,19 @@ public sealed class SqlPatientRepository(string connectionString) : IPatientRepo
 
         return await command.ExecuteNonQueryAsync(cancellationToken) > 0;
     }
+
+    public async Task<bool> DeleteAsync(Guid patientId, CancellationToken cancellationToken)
+    {
+        await using var connection = new SqlConnection(connectionString);
+        await connection.OpenAsync(cancellationToken);
+
+        const string commandText = """
+            DELETE FROM dbo.Patient
+            WHERE PatientId = @PatientId;
+            """;
+
+        await using var command = new SqlCommand(commandText, connection);
+        command.Parameters.AddWithValue("@PatientId", patientId);
+        return await command.ExecuteNonQueryAsync(cancellationToken) > 0;
+    }
 }

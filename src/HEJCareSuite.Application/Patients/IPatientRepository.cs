@@ -11,5 +11,6 @@ public interface IPatientRepository
         DateOnly birthDate,
         string documentNumber,
         CancellationToken cancellationToken);
+    Task<bool> DeleteAsync(Guid patientId, CancellationToken cancellationToken);
     Task<IReadOnlyCollection<Patient>> ListAsync(CancellationToken cancellationToken);
 }

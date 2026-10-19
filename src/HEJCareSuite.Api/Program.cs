@@ -15,6 +15,7 @@ builder.Services.AddSingleton<IPatientRepository>(
     new SqlPatientRepository(sqlServerConnectionString));
 builder.Services.AddScoped<RegisterPatient>();
 builder.Services.AddScoped<UpdatePatient>();
+builder.Services.AddScoped<DeletePatient>();
 
 var app = builder.Build();
 
