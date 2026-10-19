@@ -70,3 +70,5 @@ The following evidence should be retained for the final report:
   in `database/002_operational_indexes.sql`.
 - Added an API request DTO and centralized ProblemDetails handling for patient
   validation errors.
+- Updated the web slice to display API ProblemDetails messages instead of replacing
+  them with a generic client-side error.

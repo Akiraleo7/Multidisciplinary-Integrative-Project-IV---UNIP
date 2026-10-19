@@ -38,6 +38,8 @@ API -> Infrastructure -> Application -> Domain
   a second build toolchain prematurely.
 - **API errors** use RFC 7807-style ProblemDetails. Known domain validation errors
   return HTTP 400; unexpected errors are logged and return a generic HTTP 500 response.
+- **Frontend errors** preserve the API's ProblemDetails `detail` or `title` when
+  presenting a failure to the user, with a generic fallback only for malformed responses.
 
 ## Decisions and rationale
 
