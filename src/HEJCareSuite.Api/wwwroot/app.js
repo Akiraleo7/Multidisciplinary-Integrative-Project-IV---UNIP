@@ -8,7 +8,7 @@ async function loadPatients() {
   listStatus.classList.remove("error");
   try {
     const response = await fetch("/api/v1/patients");
-    if (!response.ok) throw new Error("Could not load patients.");
+    if (!response.ok) throw await readApiError(response, "Could not load patients.");
     const patients = await response.json();
     patientList.replaceChildren();
     patients.forEach((patient) => {
@@ -35,7 +35,7 @@ form.addEventListener("submit", async (event) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
     });
-    if (!response.ok) throw new Error("Could not save patient.");
+    if (!response.ok) throw await readApiError(response, "Could not save patient.");
     form.reset();
     formStatus.textContent = "Patient registered.";
     await loadPatients();
@@ -51,6 +51,15 @@ function escapeHtml(value) {
   return value.replace(/[&<>"']/g, (character) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
   }[character]));
+}
+
+async function readApiError(response, fallback) {
+  try {
+    const problem = await response.json();
+    return new Error(problem.detail || problem.title || fallback);
+  } catch {
+    return new Error(fallback);
+  }
 }
 
 loadPatients();
