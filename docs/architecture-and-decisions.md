@@ -33,6 +33,9 @@ API -> Infrastructure -> Application -> Domain
 - **API** exposes HTTP endpoints and composes the application.
 - **API contracts** use response DTOs so HTTP payloads do not expose domain entities
   directly.
+- **Web delivery** starts with a static responsive slice served by ASP.NET Core,
+  keeping the first frontend increment aligned with the existing API without adding
+  a second build toolchain prematurely.
 
 ## Decisions and rationale
 
