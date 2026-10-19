@@ -168,6 +168,10 @@ Every implemented feature must be mapped to:
 - Responsive UI and accessible interactions
 - Integration with all core APIs
 
+The current API also serves a first responsive web slice from
+`src/HEJCareSuite.Api/wwwroot`. It supports patient registration and listing
+through `/api/v1/patients`.
+
 ### Mobile Application
 - Authentication
 - Task/status views for care teams

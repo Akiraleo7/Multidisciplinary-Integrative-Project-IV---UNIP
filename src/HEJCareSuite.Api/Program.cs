@@ -14,6 +14,8 @@ builder.Services.AddScoped<RegisterPatient>();
 
 var app = builder.Build();
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
 app.MapControllers();
 app.Run();
 

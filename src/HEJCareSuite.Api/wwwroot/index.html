@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HEJ Care Suite</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <p class="eyebrow">HEJ Care Suite</p>
+      <h1>Patient intake</h1>
+      <p class="subtitle">Register and review patients through the hospital API.</p>
+    </header>
+
+    <section class="grid" aria-label="Patient management">
+      <form id="patient-form" class="card">
+        <h2>Register patient</h2>
+        <label>
+          Full name
+          <input name="fullName" required maxlength="200" autocomplete="name">
+        </label>
+        <label>
+          Birth date
+          <input name="birthDate" type="date" required>
+        </label>
+        <label>
+          Document number
+          <input name="documentNumber" required maxlength="40">
+        </label>
+        <button type="submit">Save patient</button>
+        <p id="form-status" class="status" role="status"></p>
+      </form>
+
+      <section class="card">
+        <div class="section-heading">
+          <h2>Patients</h2>
+          <button id="refresh-button" class="secondary" type="button">Refresh</button>
+        </div>
+        <p id="list-status" class="status" role="status">Loading patients...</p>
+        <ul id="patient-list" class="patient-list"></ul>
+      </section>
+    </section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>
