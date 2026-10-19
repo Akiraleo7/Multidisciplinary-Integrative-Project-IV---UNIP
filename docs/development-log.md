@@ -68,3 +68,5 @@ The following evidence should be retained for the final report:
   `src/HEJCareSuite.Api/wwwroot`.
 - Added idempotent operational indexes for patient name lookup and audit-log queries
   in `database/002_operational_indexes.sql`.
+- Added an API request DTO and centralized ProblemDetails handling for patient
+  validation errors.

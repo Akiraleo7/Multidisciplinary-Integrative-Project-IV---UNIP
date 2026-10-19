@@ -19,9 +19,13 @@ public sealed class PatientsController(RegisterPatient registerPatient, IPatient
 
     [HttpPost]
     public async Task<IActionResult> Register(
-        RegisterPatientCommand command,
+        RegisterPatientRequest request,
         CancellationToken cancellationToken)
     {
+        var command = new RegisterPatientCommand(
+            request.FullName,
+            request.BirthDate,
+            request.DocumentNumber);
         var patient = await registerPatient.ExecuteAsync(command, cancellationToken);
         return CreatedAtAction(nameof(List), new { id = patient.Id }, ToResponse(patient));
     }

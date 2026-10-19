@@ -63,7 +63,30 @@ public sealed class PatientsApiTests
                 && patient.FullName == expectedPatient.FullName
                 && patient.BirthDate == expectedPatient.BirthDate);
     }
+
+    [Fact]
+    public async Task PostPatients_InvalidName_ReturnsProblemDetails()
+    {
+        // Arrange
+        using var factory = new PatientsApiFactory();
+        using var client = factory.CreateClient();
+        var request = new RegisterPatientRequest(
+            " ",
+            new DateOnly(1990, 5, 20),
+            Guid.NewGuid().ToString("N"));
+
+        // Act
+        var response = await client.PostAsJsonAsync("/api/v1/patients", request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        var problem = await response.Content.ReadFromJsonAsync<ProblemDetailsResponse>();
+        Assert.NotNull(problem);
+        Assert.Equal("Invalid patient data.", problem.Title);
+    }
 }
+
+public sealed record ProblemDetailsResponse(string? Title, string? Detail);
 
 public sealed class PatientsApiFactory : WebApplicationFactory<Program>
 {
