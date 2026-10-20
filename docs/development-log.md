@@ -78,3 +78,6 @@ The following evidence should be retained for the final report:
   `DELETE /api/v1/patients/{id}` and a confirmation action in the web interface.
 - Added the authentication baseline: PBKDF2 password verification, SQL user storage,
   login endpoint, demo schema seed, and a login form in the web slice.
+- Added cookie-based authentication and authorization for patient endpoints. Integration
+  tests now use an explicit test authentication scheme, while the web UI loads patients
+  after successful login.

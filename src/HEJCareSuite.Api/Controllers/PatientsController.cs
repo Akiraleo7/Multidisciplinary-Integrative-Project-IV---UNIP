@@ -1,11 +1,13 @@
 using HEJCareSuite.Application.Patients;
 using HEJCareSuite.Api.Contracts.Patients;
 using HEJCareSuite.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HEJCareSuite.Api.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/v1/patients")]
 public sealed class PatientsController(
     RegisterPatient registerPatient,

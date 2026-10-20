@@ -3,10 +3,23 @@ using HEJCareSuite.Application.Authentication;
 using HEJCareSuite.Api.Errors;
 using HEJCareSuite.Infrastructure.Authentication;
 using HEJCareSuite.Infrastructure.Patients;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.Cookie.Name = "hejcare.auth";
+        options.LoginPath = "/api/v1/auth/login";
+        options.Events.OnRedirectToLogin = context =>
+        {
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            return Task.CompletedTask;
+        };
+    });
+builder.Services.AddAuthorization();
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<PatientExceptionHandler>();
 var sqlServerConnectionString = builder.Configuration.GetConnectionString("SqlServer")
@@ -28,6 +41,8 @@ var app = builder.Build();
 app.UseExceptionHandler();
 app.UseDefaultFiles();
 app.UseStaticFiles();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 app.Run();
 

@@ -75,6 +75,7 @@ loginForm.addEventListener("submit", async (event) => {
     if (!response.ok) throw await readApiError(response, "Invalid email or password.");
     const user = await response.json();
     loginStatus.textContent = `Signed in as ${user.role}.`;
+    await loadPatients();
   } catch (error) {
     loginStatus.textContent = error.message;
     loginStatus.classList.add("error");
@@ -130,4 +131,4 @@ async function readApiError(response, fallback) {
   }
 }
 
-loadPatients();
+listStatus.textContent = "Sign in to load patients.";
