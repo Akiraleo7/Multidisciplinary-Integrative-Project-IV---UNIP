@@ -48,6 +48,9 @@ API -> Infrastructure -> Application -> Domain
   validates credentials, and exposes the authenticated user's role.
 - **Session control** uses an HTTP-only cookie issued after successful login. Patient
   endpoints require authentication and return HTTP 401 instead of redirecting API clients.
+- **Demo credentials** are limited to local validation. Password changes currently
+  require replacing the PBKDF2 hash and salt in `dbo.UserAccount`; a self-service
+  password-change flow is a future authentication increment.
 
 ## Decisions and rationale
 

@@ -176,6 +176,10 @@ The authentication baseline is initialized with `database/003_authentication_sch
 It creates a PBKDF2-backed demo administrator for local validation; change the demo
 password before shared or production deployment.
 
+To change the local demo password, generate a new PBKDF2 hash and salt, then update
+the `PasswordHash` and `PasswordSalt` values for `admin@hejcare.local` in
+`dbo.UserAccount` through SSMS. Do not commit real passwords, hashes, or salts to Git.
+
 ### Mobile Application
 - Authentication
 - Task/status views for care teams
