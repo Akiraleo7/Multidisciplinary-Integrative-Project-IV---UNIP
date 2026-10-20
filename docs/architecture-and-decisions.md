@@ -53,6 +53,9 @@ API -> Infrastructure -> Application -> Domain
   password-change flow is a future authentication increment.
 - **Logout** explicitly invalidates the authentication cookie and clears the patient
   list from the web interface.
+- **Emergency triage** is modeled as a separate aggregate linked to Patient by a
+  foreign key. Risk levels are represented by a Domain enum and persisted as values
+  1-4 for a compact, queryable SQL model.
 
 ## Decisions and rationale
 

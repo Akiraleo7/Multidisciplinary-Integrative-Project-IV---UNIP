@@ -180,6 +180,9 @@ To change the local demo password, generate a new PBKDF2 hash and salt, then upd
 the `PasswordHash` and `PasswordSalt` values for `admin@hejcare.local` in
 `dbo.UserAccount` through SSMS. Do not commit real passwords, hashes, or salts to Git.
 
+Emergency triage is initialized with `database/004_triage_schema.sql` and exposed
+through `/api/v1/patients/{patientId}/triage` for authenticated staff.
+
 ### Mobile Application
 - Authentication
 - Task/status views for care teams

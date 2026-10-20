@@ -84,3 +84,6 @@ The following evidence should be retained for the final report:
 - Fixed API test authentication compilation by importing `ILoggerFactory` and renaming
   the test scheme constant to avoid hiding the framework's inherited `Scheme` member.
 - Added explicit logout through the cookie authentication endpoint and the web UI.
+- Added the first emergency triage vertical slice: Domain risk classification,
+  Application use case, SQL schema/repository, authenticated API endpoints, and
+  indexed patient history lookup.
