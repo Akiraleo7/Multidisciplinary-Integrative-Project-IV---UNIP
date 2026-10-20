@@ -83,3 +83,4 @@ The following evidence should be retained for the final report:
   after successful login.
 - Fixed API test authentication compilation by importing `ILoggerFactory` and renaming
   the test scheme constant to avoid hiding the framework's inherited `Scheme` member.
+- Added explicit logout through the cookie authentication endpoint and the web UI.

@@ -7,6 +7,7 @@ const submitButton = document.querySelector("#submit-button");
 const cancelButton = document.querySelector("#cancel-button");
 const loginForm = document.querySelector("#login-form");
 const loginStatus = document.querySelector("#login-status");
+const logoutButton = document.querySelector("#logout-button");
 let editingPatientId = null;
 
 async function loadPatients() {
@@ -72,6 +73,7 @@ loginForm.addEventListener("submit", async (event) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(Object.fromEntries(new FormData(loginForm)))
     });
+
     if (!response.ok) throw await readApiError(response, "Invalid email or password.");
     const user = await response.json();
     loginStatus.textContent = `Signed in as ${user.role}.`;
@@ -80,6 +82,19 @@ loginForm.addEventListener("submit", async (event) => {
     loginStatus.textContent = error.message;
     loginStatus.classList.add("error");
   }
+});
+
+logoutButton.addEventListener("click", async () => {
+  const response = await fetch("/api/v1/auth/logout", { method: "POST" });
+  if (!response.ok) {
+    loginStatus.textContent = "Could not sign out.";
+    loginStatus.classList.add("error");
+    return;
+  }
+  loginStatus.textContent = "Signed out.";
+  listStatus.textContent = "Sign in to load patients.";
+  patientList.replaceChildren();
+  endEdit();
 });
 
 function beginEdit(patient) {

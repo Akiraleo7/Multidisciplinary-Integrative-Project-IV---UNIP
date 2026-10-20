@@ -51,6 +51,8 @@ API -> Infrastructure -> Application -> Domain
 - **Demo credentials** are limited to local validation. Password changes currently
   require replacing the PBKDF2 hash and salt in `dbo.UserAccount`; a self-service
   password-change flow is a future authentication increment.
+- **Logout** explicitly invalidates the authentication cookie and clears the patient
+  list from the web interface.
 
 ## Decisions and rationale
 
