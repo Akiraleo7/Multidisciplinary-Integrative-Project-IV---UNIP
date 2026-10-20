@@ -1,12 +1,13 @@
 using HEJCareSuite.Application.Triage;
 using HEJCareSuite.Domain.Entities;
 using Microsoft.Data.SqlClient;
+using TriageEntity = HEJCareSuite.Domain.Entities.Triage;
 
 namespace HEJCareSuite.Infrastructure.Triage;
 
 public sealed class SqlTriageRepository(string connectionString) : ITriageRepository
 {
-    public async Task AddAsync(Triage triage, CancellationToken cancellationToken)
+    public async Task AddAsync(TriageEntity triage, CancellationToken cancellationToken)
     {
         await using var connection = new SqlConnection(connectionString);
         await connection.OpenAsync(cancellationToken);
@@ -26,7 +27,7 @@ public sealed class SqlTriageRepository(string connectionString) : ITriageReposi
         await command.ExecuteNonQueryAsync(cancellationToken);
     }
 
-    public async Task<IReadOnlyCollection<Triage>> ListByPatientAsync(
+    public async Task<IReadOnlyCollection<TriageEntity>> ListByPatientAsync(
         Guid patientId,
         CancellationToken cancellationToken)
     {
@@ -41,10 +42,10 @@ public sealed class SqlTriageRepository(string connectionString) : ITriageReposi
         await using var command = new SqlCommand(commandText, connection);
         command.Parameters.AddWithValue("@PatientId", patientId);
         await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-        var triages = new List<Triage>();
+        var triages = new List<TriageEntity>();
         while (await reader.ReadAsync(cancellationToken))
         {
-            triages.Add(Triage.Rehydrate(
+            triages.Add(TriageEntity.Rehydrate(
                 reader.GetGuid(0),
                 reader.GetGuid(1),
                 (TriageRiskLevel)reader.GetInt32(2),

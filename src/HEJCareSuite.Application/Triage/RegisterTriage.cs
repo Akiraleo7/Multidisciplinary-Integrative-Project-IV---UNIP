@@ -1,4 +1,5 @@
 using HEJCareSuite.Domain.Entities;
+using TriageEntity = HEJCareSuite.Domain.Entities.Triage;
 
 namespace HEJCareSuite.Application.Triage;
 
@@ -9,11 +10,11 @@ public sealed record RegisterTriageCommand(
 
 public sealed class RegisterTriage(ITriageRepository triageRepository)
 {
-    public async Task<Triage> ExecuteAsync(
+    public async Task<TriageEntity> ExecuteAsync(
         RegisterTriageCommand command,
         CancellationToken cancellationToken)
     {
-        var triage = new Triage(
+        var triage = new TriageEntity(
             command.PatientId,
             command.RiskLevel,
             command.ChiefComplaint,

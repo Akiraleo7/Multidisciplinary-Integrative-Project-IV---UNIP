@@ -87,3 +87,6 @@ The following evidence should be retained for the final report:
 - Added the first emergency triage vertical slice: Domain risk classification,
   Application use case, SQL schema/repository, authenticated API endpoints, and
   indexed patient history lookup.
+- Resolved a C# namespace collision between the `Application.Triage` namespace and
+  the Domain `Triage` entity by using an explicit entity alias in Application and
+  Infrastructure.
