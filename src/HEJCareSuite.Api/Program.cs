@@ -1,5 +1,7 @@
 using HEJCareSuite.Application.Patients;
+using HEJCareSuite.Application.Authentication;
 using HEJCareSuite.Api.Errors;
+using HEJCareSuite.Infrastructure.Authentication;
 using HEJCareSuite.Infrastructure.Patients;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +18,10 @@ builder.Services.AddSingleton<IPatientRepository>(
 builder.Services.AddScoped<RegisterPatient>();
 builder.Services.AddScoped<UpdatePatient>();
 builder.Services.AddScoped<DeletePatient>();
+builder.Services.AddScoped<AuthenticateUser>();
+builder.Services.AddSingleton<IUserRepository>(
+    new SqlUserRepository(sqlServerConnectionString));
+builder.Services.AddSingleton<IPasswordVerifier, Pbkdf2PasswordVerifier>();
 
 var app = builder.Build();
 

@@ -14,6 +14,16 @@
       <p class="subtitle">Register and review patients through the hospital API.</p>
     </header>
 
+    <form id="login-form" class="card login-card">
+      <h2>Staff login</h2>
+      <div class="login-fields">
+        <input name="email" type="email" placeholder="Email" required autocomplete="username">
+        <input name="password" type="password" placeholder="Password" required autocomplete="current-password">
+        <button type="submit">Sign in</button>
+      </div>
+      <p id="login-status" class="status" role="status"></p>
+    </form>
+
     <section class="grid" aria-label="Patient management">
       <form id="patient-form" class="card">
         <h2 id="form-title">Register patient</h2>

@@ -5,6 +5,8 @@ const patientList = document.querySelector("#patient-list");
 const formTitle = document.querySelector("#form-title");
 const submitButton = document.querySelector("#submit-button");
 const cancelButton = document.querySelector("#cancel-button");
+const loginForm = document.querySelector("#login-form");
+const loginStatus = document.querySelector("#login-status");
 let editingPatientId = null;
 
 async function loadPatients() {
@@ -60,6 +62,24 @@ form.addEventListener("submit", async (event) => {
 
 document.querySelector("#refresh-button").addEventListener("click", loadPatients);
 cancelButton.addEventListener("click", endEdit);
+loginForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  loginStatus.textContent = "Signing in...";
+  loginStatus.classList.remove("error");
+  try {
+    const response = await fetch("/api/v1/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(Object.fromEntries(new FormData(loginForm)))
+    });
+    if (!response.ok) throw await readApiError(response, "Invalid email or password.");
+    const user = await response.json();
+    loginStatus.textContent = `Signed in as ${user.role}.`;
+  } catch (error) {
+    loginStatus.textContent = error.message;
+    loginStatus.classList.add("error");
+  }
+});
 
 function beginEdit(patient) {
   editingPatientId = patient.id;
