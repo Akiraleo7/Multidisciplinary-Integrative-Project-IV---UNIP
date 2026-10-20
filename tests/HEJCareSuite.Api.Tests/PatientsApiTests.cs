@@ -3,8 +3,11 @@ using System.Net.Http.Json;
 using HEJCareSuite.Api.Contracts.Patients;
 using HEJCareSuite.Application.Patients;
 using HEJCareSuite.Domain.Entities;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Options;
+using System.Security.Claims;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -141,9 +144,37 @@ public sealed class PatientsApiFactory : WebApplicationFactory<Program>
 
         builder.ConfigureServices(services =>
         {
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = TestAuthenticationHandler.Scheme;
+                    options.DefaultChallengeScheme = TestAuthenticationHandler.Scheme;
+                })
+                .AddScheme<AuthenticationSchemeOptions, TestAuthenticationHandler>(
+                    TestAuthenticationHandler.Scheme,
+                    _ => { });
             services.RemoveAll<IPatientRepository>();
             services.AddSingleton<IPatientRepository>(Repository);
         });
+    }
+
+    public sealed class TestAuthenticationHandler(
+        IOptionsMonitor<AuthenticationSchemeOptions> options,
+        ILoggerFactory logger,
+        System.Text.Encodings.Web.UrlEncoder encoder)
+        : AuthenticationHandler<AuthenticationSchemeOptions>(options, logger, encoder)
+    {
+        public const string Scheme = "Test";
+
+        protected override Task<AuthenticateResult> HandleAuthenticateAsync()
+        {
+            var identity = new ClaimsIdentity(
+                [new Claim(ClaimTypes.Name, "integration-test")],
+                Scheme);
+            return Task.FromResult(
+                AuthenticateResult.Success(new AuthenticationTicket(
+                    new ClaimsPrincipal(identity),
+                    Scheme)));
+        }
     }
 }
 

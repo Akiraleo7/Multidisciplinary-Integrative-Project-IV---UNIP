@@ -1,5 +1,8 @@
 using HEJCareSuite.Api.Contracts.Authentication;
 using HEJCareSuite.Application.Authentication;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HEJCareSuite.Api.Controllers;
@@ -18,8 +21,21 @@ public sealed class AuthenticationController(AuthenticateUser authenticateUser)
             new AuthenticateUserCommand(request.Email, request.Password),
             cancellationToken);
 
-        return user is null
-            ? Unauthorized(new { message = "Invalid email or password." })
-            : Ok(new { user.Email, user.Role });
+        if (user is null)
+            return Unauthorized(new { message = "Invalid email or password." });
+
+        var claims = new[]
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.Role, user.Role)
+        };
+        await HttpContext.SignInAsync(
+            CookieAuthenticationDefaults.AuthenticationScheme,
+            new ClaimsPrincipal(new ClaimsIdentity(
+                claims,
+                CookieAuthenticationDefaults.AuthenticationScheme)));
+
+        return Ok(new { user.Email, user.Role });
     }
 }
