@@ -44,6 +44,9 @@ API -> Infrastructure -> Application -> Domain
   frontend reuses the registration form to avoid duplicate UI flows.
 - **Patient deletion** uses a `DELETE` endpoint with confirmation in the web UI;
   the existing SQL trigger preserves the audit trail.
+- **Authentication baseline** stores PBKDF2 password hashes and salts in SQL Server.
+  The current increment validates credentials and returns the role; endpoint
+  authorization and session persistence are intentionally the next increment.
 
 ## Decisions and rationale
 

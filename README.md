@@ -172,6 +172,10 @@ The current API also serves a first responsive web slice from
 `src/HEJCareSuite.Api/wwwroot`. It supports patient registration and listing
 through `/api/v1/patients`.
 
+The authentication baseline is initialized with `database/003_authentication_schema.sql`.
+It creates a PBKDF2-backed demo administrator for local validation; change the demo
+password before shared or production deployment.
+
 ### Mobile Application
 - Authentication
 - Task/status views for care teams

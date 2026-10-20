@@ -76,3 +76,5 @@ The following evidence should be retained for the final report:
   the web interface, including an integration test for `PUT /api/v1/patients/{id}`.
 - Completed the patient CRUD slice with audited deletion through
   `DELETE /api/v1/patients/{id}` and a confirmation action in the web interface.
+- Added the authentication baseline: PBKDF2 password verification, SQL user storage,
+  login endpoint, demo schema seed, and a login form in the web slice.
