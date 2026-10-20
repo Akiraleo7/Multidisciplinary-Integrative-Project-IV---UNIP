@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -146,11 +147,11 @@ public sealed class PatientsApiFactory : WebApplicationFactory<Program>
         {
             services.AddAuthentication(options =>
                 {
-                    options.DefaultAuthenticateScheme = TestAuthenticationHandler.Scheme;
-                    options.DefaultChallengeScheme = TestAuthenticationHandler.Scheme;
+                    options.DefaultAuthenticateScheme = TestAuthenticationHandler.TestScheme;
+                    options.DefaultChallengeScheme = TestAuthenticationHandler.TestScheme;
                 })
                 .AddScheme<AuthenticationSchemeOptions, TestAuthenticationHandler>(
-                    TestAuthenticationHandler.Scheme,
+                    TestAuthenticationHandler.TestScheme,
                     _ => { });
             services.RemoveAll<IPatientRepository>();
             services.AddSingleton<IPatientRepository>(Repository);
@@ -163,17 +164,17 @@ public sealed class PatientsApiFactory : WebApplicationFactory<Program>
         System.Text.Encodings.Web.UrlEncoder encoder)
         : AuthenticationHandler<AuthenticationSchemeOptions>(options, logger, encoder)
     {
-        public const string Scheme = "Test";
+        public const string TestScheme = "Test";
 
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
             var identity = new ClaimsIdentity(
                 [new Claim(ClaimTypes.Name, "integration-test")],
-                Scheme);
+                TestScheme);
             return Task.FromResult(
                 AuthenticateResult.Success(new AuthenticationTicket(
                     new ClaimsPrincipal(identity),
-                    Scheme)));
+                    TestScheme)));
         }
     }
 }

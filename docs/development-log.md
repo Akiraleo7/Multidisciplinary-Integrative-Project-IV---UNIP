@@ -81,3 +81,5 @@ The following evidence should be retained for the final report:
 - Added cookie-based authentication and authorization for patient endpoints. Integration
   tests now use an explicit test authentication scheme, while the web UI loads patients
   after successful login.
+- Fixed API test authentication compilation by importing `ILoggerFactory` and renaming
+  the test scheme constant to avoid hiding the framework's inherited `Scheme` member.
