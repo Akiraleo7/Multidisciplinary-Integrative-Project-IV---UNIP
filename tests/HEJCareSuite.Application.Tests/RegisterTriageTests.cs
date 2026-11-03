@@ -1,6 +1,5 @@
 using HEJCareSuite.Application.Triage;
 using HEJCareSuite.Domain.Entities;
-using TriageEntity = HEJCareSuite.Domain.Entities.Triage;
 using Xunit;
 
 namespace HEJCareSuite.Application.Tests;
@@ -25,19 +24,21 @@ public sealed class RegisterTriageTests
 
     private sealed class FakeTriageRepository : ITriageRepository
     {
-        public List<TriageEntity> Items { get; } = [];
+        public List<global::HEJCareSuite.Domain.Entities.Triage> Items { get; } = [];
 
-        public Task AddAsync(TriageEntity triage, CancellationToken cancellationToken)
+        public Task AddAsync(
+            global::HEJCareSuite.Domain.Entities.Triage triage,
+            CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             Items.Add(triage);
             return Task.CompletedTask;
         }
 
-        public Task<IReadOnlyCollection<TriageEntity>> ListByPatientAsync(
+        public Task<IReadOnlyCollection<global::HEJCareSuite.Domain.Entities.Triage>> ListByPatientAsync(
             Guid patientId,
             CancellationToken cancellationToken) =>
-            Task.FromResult<IReadOnlyCollection<TriageEntity>>(
+            Task.FromResult<IReadOnlyCollection<global::HEJCareSuite.Domain.Entities.Triage>>(
                 Items.Where(item => item.PatientId == patientId).ToArray());
     }
 }
