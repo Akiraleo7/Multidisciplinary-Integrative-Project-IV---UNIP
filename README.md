@@ -183,6 +183,13 @@ the `PasswordHash` and `PasswordSalt` values for `admin@hejcare.local` in
 Emergency triage is initialized with `database/004_triage_schema.sql` and exposed
 through `/api/v1/patients/{patientId}/triage` for authenticated staff.
 
+Hospital admission and discharge are initialized with
+`database/005_hospitalization_schema.sql` and exposed through:
+
+- `GET /api/v1/patients/{patientId}/admissions`
+- `POST /api/v1/patients/{patientId}/admissions`
+- `POST /api/v1/patients/{patientId}/admissions/{admissionId}/discharge`
+
 ### Mobile Application
 - Authentication
 - Task/status views for care teams
