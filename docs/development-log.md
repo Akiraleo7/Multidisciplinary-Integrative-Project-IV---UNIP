@@ -90,3 +90,6 @@ The following evidence should be retained for the final report:
 - Resolved a C# namespace collision between the `Application.Triage` namespace and
   the Domain `Triage` entity by using an explicit entity alias in Application and
   Infrastructure.
+- Added the authenticated triage workflow to the static web interface. Staff can
+  select a patient, review triage history, register a risk level and chief complaint,
+  and clear the selected context on logout.

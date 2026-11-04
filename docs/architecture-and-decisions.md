@@ -56,6 +56,10 @@ API -> Infrastructure -> Application -> Domain
 - **Emergency triage** is modeled as a separate aggregate linked to Patient by a
   foreign key. Risk levels are represented by a Domain enum and persisted as values
   1-4 for a compact, queryable SQL model.
+- **Triage web flow** reuses the authenticated patient list as the patient-selection
+  surface. A selected patient loads history through the existing GET endpoint and
+  submits new records through the existing POST endpoint, avoiding duplicated patient
+  lookup state in the frontend.
 
 ## Decisions and rationale
 

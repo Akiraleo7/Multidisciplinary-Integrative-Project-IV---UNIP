@@ -54,6 +54,35 @@
         <ul id="patient-list" class="patient-list"></ul>
       </section>
     </section>
+
+    <section id="triage-section" class="card hidden" aria-label="Emergency triage">
+      <div class="section-heading">
+        <div>
+          <h2>Emergency triage</h2>
+          <p id="triage-patient" class="muted">Select a patient to manage triage.</p>
+        </div>
+      </div>
+      <form id="triage-form">
+        <label>
+          Risk level
+          <select name="riskLevel" required>
+            <option value="1">Blue</option>
+            <option value="2">Green</option>
+            <option value="3" selected>Yellow</option>
+            <option value="4">Red</option>
+          </select>
+        </label>
+        <label>
+          Chief complaint
+          <textarea name="chiefComplaint" required maxlength="2000" rows="3"></textarea>
+        </label>
+        <button type="submit">Register triage</button>
+        <p id="triage-status" class="status" role="status"></p>
+      </form>
+      <h3>History</h3>
+      <p id="triage-list-status" class="status"></p>
+      <ul id="triage-list" class="triage-list"></ul>
+    </section>
   </main>
   <script src="/app.js"></script>
 </body>
