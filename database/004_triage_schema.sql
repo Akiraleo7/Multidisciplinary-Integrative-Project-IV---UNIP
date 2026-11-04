@@ -3,7 +3,31 @@
     Requirement coverage: FR-02, BR-01, NFR-02
 */
 
+IF DB_ID(N'HEJCareSuite') IS NULL
+BEGIN
+    THROW 50029, 'Database HEJCareSuite must exist before applying this script.', 1;
+END;
+GO
+
 USE [HEJCareSuite];
+GO
+
+IF OBJECT_ID(N'dbo.SchemaVersion', N'U') IS NULL
+BEGIN
+    THROW 50032, 'Table dbo.SchemaVersion must exist before applying this script.', 1;
+END;
+GO
+
+IF OBJECT_ID(N'dbo.Patient', N'U') IS NULL
+BEGIN
+    THROW 50030, 'Table dbo.Patient must exist before applying this script.', 1;
+END;
+GO
+
+IF OBJECT_ID(N'dbo.AuditLog', N'U') IS NULL
+BEGIN
+    THROW 50031, 'Table dbo.AuditLog must exist before applying this script.', 1;
+END;
 GO
 
 IF OBJECT_ID(N'dbo.Triage', N'U') IS NULL
@@ -25,7 +49,43 @@ BEGIN
 END;
 GO
 
-IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = N'IX_Triage_Patient')
+IF OBJECT_ID(N'dbo.TR_Triage_AuditLog', N'TR') IS NULL
+BEGIN
+    EXEC(N'
+        CREATE TRIGGER dbo.TR_Triage_AuditLog
+        ON dbo.Triage
+        AFTER INSERT, UPDATE, DELETE
+        AS
+        BEGIN
+            SET NOCOUNT ON;
+
+            INSERT INTO dbo.AuditLog (EntityName, EntityId, ActionName, Details)
+            SELECT
+                N''Triage'',
+                COALESCE(inserted.TriageId, deleted.TriageId),
+                CASE
+                    WHEN inserted.TriageId IS NOT NULL AND deleted.TriageId IS NULL
+                        THEN N''INSERT''
+                    WHEN inserted.TriageId IS NOT NULL AND deleted.TriageId IS NOT NULL
+                        THEN N''UPDATE''
+                    ELSE N''DELETE''
+                END,
+                N''Triage record changed''
+            FROM inserted
+            FULL OUTER JOIN deleted
+                ON inserted.TriageId = deleted.TriageId;
+        END;
+    ');
+END;
+GO
+
+IF NOT EXISTS
+(
+    SELECT 1
+    FROM sys.indexes
+    WHERE name = N'IX_Triage_Patient'
+      AND object_id = OBJECT_ID(N'dbo.Triage')
+)
 BEGIN
     CREATE INDEX IX_Triage_Patient ON dbo.Triage (PatientId, RecordedAtUtc DESC);
 END;
