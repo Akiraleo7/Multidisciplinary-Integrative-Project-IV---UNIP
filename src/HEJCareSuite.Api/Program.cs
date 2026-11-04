@@ -5,6 +5,8 @@ using HEJCareSuite.Infrastructure.Authentication;
 using HEJCareSuite.Infrastructure.Patients;
 using HEJCareSuite.Application.Triage;
 using HEJCareSuite.Infrastructure.Triage;
+using HEJCareSuite.Application.Hospitalization;
+using HEJCareSuite.Infrastructure.Hospitalization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,6 +38,10 @@ builder.Services.AddScoped<DeletePatient>();
 builder.Services.AddScoped<RegisterTriage>();
 builder.Services.AddSingleton<ITriageRepository>(
     new SqlTriageRepository(sqlServerConnectionString));
+builder.Services.AddScoped<AdmitPatient>();
+builder.Services.AddScoped<DischargePatient>();
+builder.Services.AddSingleton<IHospitalAdmissionRepository>(
+    new SqlHospitalAdmissionRepository(sqlServerConnectionString));
 builder.Services.AddScoped<AuthenticateUser>();
 builder.Services.AddSingleton<IUserRepository>(
     new SqlUserRepository(sqlServerConnectionString));

@@ -93,3 +93,7 @@ The following evidence should be retained for the final report:
 - Added the authenticated triage workflow to the static web interface. Staff can
   select a patient, review triage history, register a risk level and chief complaint,
   and clear the selected context on logout.
+- Added the hospitalization vertical slice for FR-03: active admissions with bed
+  allocation, patient admission history, and discharge with mandatory notes. Added
+  `database/005_hospitalization_schema.sql`, SQL persistence, authenticated API
+  endpoints, and Domain/Application tests.

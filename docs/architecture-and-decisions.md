@@ -60,6 +60,10 @@ API -> Infrastructure -> Application -> Domain
   surface. A selected patient loads history through the existing GET endpoint and
   submits new records through the existing POST endpoint, avoiding duplicated patient
   lookup state in the frontend.
+- **Hospitalization** uses a single `HospitalAdmission` aggregate with an explicit
+  `AdmissionStatus`. Bed allocation is stored on the admission record, and discharge
+  updates the same record with UTC timestamp and mandatory notes, preserving a simple
+  auditable lifecycle for the first FR-03 increment.
 
 ## Decisions and rationale
 
