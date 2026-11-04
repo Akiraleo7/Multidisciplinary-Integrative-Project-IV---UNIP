@@ -11,6 +11,7 @@ using System.Security.Claims;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 using Xunit;
 
 namespace HEJCareSuite.Api.Tests;
