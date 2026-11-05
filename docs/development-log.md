@@ -120,3 +120,7 @@ The following evidence should be retained for the final report:
 - Added a multi-stage .NET 8 `Dockerfile` that publishes the API and web
   application on port `8080`, leaving the SQL Server connection string to the
   deployment environment.
+- Fixed CI test-project compilation by declaring the `Xunit` global using in
+  all test projects. The workflow now supplies a non-secret test connection
+  string required during API host startup and avoids duplicate runs on feature
+  branch pushes plus pull requests.
