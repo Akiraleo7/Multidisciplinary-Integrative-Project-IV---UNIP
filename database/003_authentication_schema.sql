@@ -54,6 +54,90 @@ GO
 IF NOT EXISTS
 (
     SELECT 1
+    FROM sys.check_constraints
+    WHERE name = N'CK_UserAccount_Email_NotBlank'
+      AND parent_object_id = OBJECT_ID(N'dbo.UserAccount')
+)
+BEGIN
+    IF EXISTS
+    (
+        SELECT 1 FROM dbo.UserAccount
+        WHERE LEN(LTRIM(RTRIM(Email))) = 0
+    )
+        THROW 50021, 'Existing UserAccount rows contain a blank email.', 1;
+
+    ALTER TABLE dbo.UserAccount
+        ADD CONSTRAINT CK_UserAccount_Email_NotBlank
+            CHECK (LEN(LTRIM(RTRIM(Email))) > 0);
+END;
+GO
+
+IF NOT EXISTS
+(
+    SELECT 1
+    FROM sys.check_constraints
+    WHERE name = N'CK_UserAccount_PasswordHash_NotBlank'
+      AND parent_object_id = OBJECT_ID(N'dbo.UserAccount')
+)
+BEGIN
+    IF EXISTS
+    (
+        SELECT 1 FROM dbo.UserAccount
+        WHERE LEN(LTRIM(RTRIM(PasswordHash))) = 0
+    )
+        THROW 50022, 'Existing UserAccount rows contain a blank password hash.', 1;
+
+    ALTER TABLE dbo.UserAccount
+        ADD CONSTRAINT CK_UserAccount_PasswordHash_NotBlank
+            CHECK (LEN(LTRIM(RTRIM(PasswordHash))) > 0);
+END;
+GO
+
+IF NOT EXISTS
+(
+    SELECT 1
+    FROM sys.check_constraints
+    WHERE name = N'CK_UserAccount_PasswordSalt_NotBlank'
+      AND parent_object_id = OBJECT_ID(N'dbo.UserAccount')
+)
+BEGIN
+    IF EXISTS
+    (
+        SELECT 1 FROM dbo.UserAccount
+        WHERE LEN(LTRIM(RTRIM(PasswordSalt))) = 0
+    )
+        THROW 50023, 'Existing UserAccount rows contain a blank password salt.', 1;
+
+    ALTER TABLE dbo.UserAccount
+        ADD CONSTRAINT CK_UserAccount_PasswordSalt_NotBlank
+            CHECK (LEN(LTRIM(RTRIM(PasswordSalt))) > 0);
+END;
+GO
+
+IF NOT EXISTS
+(
+    SELECT 1
+    FROM sys.check_constraints
+    WHERE name = N'CK_UserAccount_RoleName_NotBlank'
+      AND parent_object_id = OBJECT_ID(N'dbo.UserAccount')
+)
+BEGIN
+    IF EXISTS
+    (
+        SELECT 1 FROM dbo.UserAccount
+        WHERE LEN(LTRIM(RTRIM(RoleName))) = 0
+    )
+        THROW 50024, 'Existing UserAccount rows contain a blank role.', 1;
+
+    ALTER TABLE dbo.UserAccount
+        ADD CONSTRAINT CK_UserAccount_RoleName_NotBlank
+            CHECK (LEN(LTRIM(RTRIM(RoleName))) > 0);
+END;
+GO
+
+IF NOT EXISTS
+(
+    SELECT 1
     FROM sys.indexes
     WHERE name = N'IX_UserAccount_Email_Active'
       AND object_id = OBJECT_ID(N'dbo.UserAccount')
