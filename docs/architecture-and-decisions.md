@@ -108,9 +108,11 @@ connected.
 
 ## Current scope and next decisions
 
-- Patient registration and listing are the first implemented feature.
-- The initial SQL schema includes `Patient`, `AuditLog`, and `SchemaVersion`.
-- Authentication, authorization, triage, admissions, exams, pharmacy, and mobile
-  workflows remain future increments.
+- Patient CRUD, authentication baseline, emergency triage, and hospitalization
+  admission/discharge are implemented MVP increments.
+- The SQL baseline includes `Patient`, `UserAccount`, `Triage`, `HospitalAdmission`,
+  `AuditLog`, and `SchemaVersion`.
+- Exams, pharmacy, role-specific dashboards, and a native mobile client remain
+  planned scope and must not be presented as completed functionality.
 - Database migrations and automated integration tests should be introduced before
   production deployment.

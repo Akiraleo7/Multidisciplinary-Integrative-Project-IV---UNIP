@@ -100,3 +100,15 @@ The following evidence should be retained for the final report:
 - Completed the web surface for FR-03. Staff can select a patient, admit them to a
   bed, review admission history, and submit discharge notes through the existing
   authenticated API.
+
+## 2026-11-05 - MVP traceability baseline
+
+- Verified that the hospitalization web workflow is included in `origin/main`
+  through merged PR #38.
+- Added `docs/requirements-traceability.md` to map the implemented MVP and
+  remaining planned scope to FR, NFR, and BR identifiers.
+- Recorded the evidence still required for the academic report: Codespace
+  validation, browser screenshots, SSMS audit queries, API examples, and
+  Pull Request history.
+- Added the read-only `database/006_validation_queries.sql` script to collect
+  database evidence without changing application data or schema state.
