@@ -64,6 +64,9 @@ API -> Infrastructure -> Application -> Domain
   `AdmissionStatus`. Bed allocation is stored on the admission record, and discharge
   updates the same record with UTC timestamp and mandatory notes, preserving a simple
   auditable lifecycle for the first FR-03 increment.
+- **Hospitalization web flow** reuses the authenticated patient list for patient
+  selection and keeps admission/discharge state scoped to the selected patient,
+  preventing cross-patient actions in the browser.
 
 ## Decisions and rationale
 

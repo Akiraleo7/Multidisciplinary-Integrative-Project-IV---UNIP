@@ -97,3 +97,6 @@ The following evidence should be retained for the final report:
   allocation, patient admission history, and discharge with mandatory notes. Added
   `database/005_hospitalization_schema.sql`, SQL persistence, authenticated API
   endpoints, and Domain/Application tests.
+- Completed the web surface for FR-03. Staff can select a patient, admit them to a
+  bed, review admission history, and submit discharge notes through the existing
+  authenticated API.

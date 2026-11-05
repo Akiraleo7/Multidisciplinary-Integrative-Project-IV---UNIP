@@ -14,8 +14,18 @@ const triagePatient = document.querySelector("#triage-patient");
 const triageStatus = document.querySelector("#triage-status");
 const triageListStatus = document.querySelector("#triage-list-status");
 const triageList = document.querySelector("#triage-list");
+const admissionSection = document.querySelector("#admission-section");
+const admissionForm = document.querySelector("#admission-form");
+const admissionPatient = document.querySelector("#admission-patient");
+const admissionStatus = document.querySelector("#admission-status");
+const dischargeForm = document.querySelector("#discharge-form");
+const admissionListStatus = document.querySelector("#admission-list-status");
+const admissionList = document.querySelector("#admission-list");
+const cancelDischargeButton = document.querySelector("#cancel-discharge-button");
 let editingPatientId = null;
 let selectedTriagePatient = null;
+let selectedAdmissionPatient = null;
+let selectedAdmissionId = null;
 
 async function loadPatients() {
   listStatus.textContent = "Loading patients...";
@@ -33,10 +43,12 @@ async function loadPatients() {
           <button class="edit-button" type="button">Edit</button>
           <button class="delete-button" type="button">Delete</button>
           <button class="triage-button" type="button">Triage</button>
+          <button class="admission-button" type="button">Admission</button>
         </span>`;
       item.querySelector(".edit-button").addEventListener("click", () => beginEdit(patient));
       item.querySelector(".delete-button").addEventListener("click", () => deletePatient(patient));
       item.querySelector(".triage-button").addEventListener("click", () => selectTriagePatient(patient));
+      item.querySelector(".admission-button").addEventListener("click", () => selectAdmissionPatient(patient));
       patientList.append(item);
     });
     listStatus.textContent = patients.length ? "" : "No patients registered yet.";
@@ -96,6 +108,55 @@ triageForm.addEventListener("submit", async (event) => {
   }
 });
 
+admissionForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  if (!selectedAdmissionPatient) return;
+  admissionStatus.textContent = "Saving...";
+  admissionStatus.classList.remove("error");
+  try {
+    const response = await fetch(
+      `/api/v1/patients/${selectedAdmissionPatient.id}/admissions`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(Object.fromEntries(new FormData(admissionForm)))
+      });
+    if (!response.ok) throw await readApiError(response, "Could not admit patient.");
+    admissionForm.reset();
+    admissionStatus.textContent = "Patient admitted.";
+    await loadAdmissions(selectedAdmissionPatient);
+  } catch (error) {
+    admissionStatus.textContent = error.message;
+    admissionStatus.classList.add("error");
+  }
+});
+
+dischargeForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  if (!selectedAdmissionPatient || !selectedAdmissionId) return;
+  admissionListStatus.textContent = "Saving...";
+  admissionListStatus.classList.remove("error");
+  try {
+    const response = await fetch(
+      `/api/v1/patients/${selectedAdmissionPatient.id}/admissions/${selectedAdmissionId}/discharge`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(Object.fromEntries(new FormData(dischargeForm)))
+      });
+    if (!response.ok) throw await readApiError(response, "Could not discharge admission.");
+    dischargeForm.reset();
+    cancelDischarge();
+    admissionListStatus.textContent = "Admission discharged.";
+    await loadAdmissions(selectedAdmissionPatient);
+  } catch (error) {
+    admissionListStatus.textContent = error.message;
+    admissionListStatus.classList.add("error");
+  }
+});
+
+cancelDischargeButton.addEventListener("click", cancelDischarge);
+
 document.querySelector("#refresh-button").addEventListener("click", loadPatients);
 cancelButton.addEventListener("click", endEdit);
 loginForm.addEventListener("submit", async (event) => {
@@ -130,6 +191,7 @@ logoutButton.addEventListener("click", async () => {
   listStatus.textContent = "Sign in to load patients.";
   patientList.replaceChildren();
   clearTriage();
+  clearAdmission();
   endEdit();
 });
 
@@ -161,6 +223,7 @@ async function deletePatient(patient) {
       endEdit();
     }
     if (selectedTriagePatient?.id === patient.id) clearTriage();
+    if (selectedAdmissionPatient?.id === patient.id) clearAdmission();
     await loadPatients();
   } catch (error) {
     listStatus.textContent = error.message;
@@ -216,6 +279,70 @@ function riskLabel(riskLevel) {
     3: "Yellow",
     4: "Red"
   }[riskLevel] || "Unknown");
+}
+
+function selectAdmissionPatient(patient) {
+  selectedAdmissionPatient = patient;
+  admissionSection.classList.remove("hidden");
+  admissionPatient.textContent = `Patient: ${patient.fullName}`;
+  admissionStatus.textContent = "";
+  loadAdmissions(patient);
+  admissionSection.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+async function loadAdmissions(patient) {
+  admissionListStatus.textContent = "Loading admission history...";
+  admissionListStatus.classList.remove("error");
+  try {
+    const response = await fetch(`/api/v1/patients/${patient.id}/admissions`);
+    if (!response.ok) throw await readApiError(response, "Could not load admission history.");
+    const admissions = await response.json();
+    admissionList.replaceChildren();
+    admissions.forEach((admission) => {
+      const item = document.createElement("li");
+      item.innerHTML = `<strong>${admissionStatusLabel(admission.status)}</strong>
+        <span>Bed: ${escapeHtml(admission.bedNumber)}</span>
+        <span>Admitted: ${new Date(admission.admittedAtUtc).toLocaleString()}</span>
+        ${admission.dischargedAtUtc
+          ? `<span>Discharged: ${new Date(admission.dischargedAtUtc).toLocaleString()}</span>
+             <span>Notes: ${escapeHtml(admission.dischargeNotes)}</span>`
+          : `<button class="discharge-button" type="button">Discharge</button>`}`;
+      const dischargeButton = item.querySelector(".discharge-button");
+      dischargeButton?.addEventListener("click", () => beginDischarge(admission.id));
+      admissionList.append(item);
+    });
+    admissionListStatus.textContent = admissions.length ? "" : "No admissions registered yet.";
+  } catch (error) {
+    admissionListStatus.textContent = error.message;
+    admissionListStatus.classList.add("error");
+  }
+}
+
+function beginDischarge(admissionId) {
+  selectedAdmissionId = admissionId;
+  dischargeForm.classList.remove("hidden");
+  dischargeForm.elements.dischargeNotes.focus();
+}
+
+function cancelDischarge() {
+  selectedAdmissionId = null;
+  dischargeForm.reset();
+  dischargeForm.classList.add("hidden");
+}
+
+function clearAdmission() {
+  selectedAdmissionPatient = null;
+  admissionSection.classList.add("hidden");
+  admissionForm.reset();
+  cancelDischarge();
+  admissionList.replaceChildren();
+  admissionPatient.textContent = "Select a patient to manage admission.";
+  admissionStatus.textContent = "";
+  admissionListStatus.textContent = "";
+}
+
+function admissionStatusLabel(status) {
+  return status === 1 ? "Active" : "Discharged";
 }
 
 function escapeHtml(value) {
