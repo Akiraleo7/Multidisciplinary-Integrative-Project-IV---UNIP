@@ -41,8 +41,7 @@ SELECT
     OBJECT_SCHEMA_NAME(parent_object_id) AS SchemaName,
     OBJECT_NAME(parent_object_id) AS TableName,
     name AS ConstraintName,
-    type_desc AS ConstraintType,
-    is_disabled AS IsDisabled
+    type_desc AS ConstraintType
 FROM sys.objects
 WHERE parent_object_id IN
 (
@@ -96,7 +95,7 @@ ORDER BY TableName, TriggerName;
 GO
 
 -- 6. Row counts for the MVP tables
-SELECT N'Patient' AS TableName, COUNT_BIG(*) AS RowCount FROM dbo.Patient
+SELECT N'Patient' AS TableName, COUNT_BIG(*) AS [RowCount] FROM dbo.Patient
 UNION ALL
 SELECT N'UserAccount', COUNT_BIG(*) FROM dbo.UserAccount
 UNION ALL
