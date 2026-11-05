@@ -21,6 +21,7 @@ h2 { margin-top: 0; }
 label { display: grid; gap: .4rem; margin: 1rem 0; font-weight: 600; }
 input { border: 1px solid #bcc9d8; border-radius: 8px; padding: .75rem; font: inherit; }
 select, textarea { border: 1px solid #bcc9d8; border-radius: 8px; padding: .75rem; font: inherit; }
+textarea { resize: vertical; }
 button { border: 0; border-radius: 8px; padding: .75rem 1rem; color: #fff; background: #157f86; font: inherit; font-weight: 700; cursor: pointer; }
 button:hover { background: #10656b; }
 button.secondary { color: #157f86; background: #e1f1f2; }
@@ -32,13 +33,19 @@ button.secondary { color: #157f86; background: #e1f1f2; }
 .patient-list strong, .patient-list span { display: block; }
 .patient-list span { color: #536176; font-size: .9rem; margin-top: .25rem; }
 .patient-actions { display: flex; gap: .5rem; margin-top: .65rem; }
-.patient-list .edit-button, .patient-list .delete-button, .patient-list .triage-button { padding: .45rem .7rem; font-size: .85rem; }
+.patient-list .edit-button, .patient-list .delete-button, .patient-list .triage-button, .patient-list .admission-button { padding: .45rem .7rem; font-size: .85rem; }
 .patient-list .delete-button { background: #b42318; }
 .patient-list .triage-button { background: #536176; }
+.patient-list .admission-button { background: #7657a8; }
 .triage-list { display: grid; gap: .75rem; padding: 0; list-style: none; }
 .triage-list li { border: 1px solid #cfe2e4; background: #f6f9fb; padding: .8rem 1rem; }
 .triage-list strong, .triage-list span { display: block; }
 .triage-list span { color: #536176; font-size: .9rem; margin-top: .25rem; }
+.admission-list { display: grid; gap: .75rem; padding: 0; list-style: none; }
+.admission-list li { border: 1px solid #ddd2eb; background: #f8f6fb; padding: .8rem 1rem; }
+.admission-list strong, .admission-list span { display: block; }
+.admission-list span { color: #536176; font-size: .9rem; margin-top: .25rem; }
+.discharge-button { margin-top: .65rem; background: #7657a8; }
 .muted { color: #536176; }
 .hidden { display: none; }
 @media (max-width: 720px) { .shell { padding-top: 2rem; } .grid { grid-template-columns: 1fr; } }

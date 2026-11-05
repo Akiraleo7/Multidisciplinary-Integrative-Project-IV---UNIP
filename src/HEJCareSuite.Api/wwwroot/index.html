@@ -83,6 +83,30 @@
       <p id="triage-list-status" class="status"></p>
       <ul id="triage-list" class="triage-list"></ul>
     </section>
+
+    <section id="admission-section" class="card hidden" aria-label="Hospital admission">
+      <h2>Hospital admission</h2>
+      <p id="admission-patient" class="muted">Select a patient to manage admission.</p>
+      <form id="admission-form">
+        <label>
+          Bed number
+          <input name="bedNumber" required maxlength="40">
+        </label>
+        <button type="submit">Admit patient</button>
+        <p id="admission-status" class="status" role="status"></p>
+      </form>
+      <form id="discharge-form" class="hidden">
+        <label>
+          Discharge notes
+          <textarea name="dischargeNotes" required maxlength="2000" rows="3"></textarea>
+        </label>
+        <button type="submit">Discharge selected admission</button>
+        <button id="cancel-discharge-button" class="secondary" type="button">Cancel</button>
+      </form>
+      <h3>Admission history</h3>
+      <p id="admission-list-status" class="status"></p>
+      <ul id="admission-list" class="admission-list"></ul>
+    </section>
   </main>
   <script src="/app.js"></script>
 </body>
