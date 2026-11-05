@@ -293,6 +293,12 @@ This repository baseline aligns with the nine PIM IV stages:
 8. Cloud + DevOps plan  
 9. Agile project management  
 
+The repository also includes a GitHub Actions CI workflow
+(`.github/workflows/ci.yml`) that restores, builds, tests, and validates frontend
+syntax on pushes and pull requests. The root `Dockerfile` publishes the API and
+web application as an ASP.NET Core container listening on port `8080`; the SQL
+Server connection string must be provided by the deployment environment.
+
 ---
 
 ## 14) Team Collaboration Notes

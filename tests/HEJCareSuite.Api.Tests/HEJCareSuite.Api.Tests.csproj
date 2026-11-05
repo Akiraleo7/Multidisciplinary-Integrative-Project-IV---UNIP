@@ -16,6 +16,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\src\HEJCareSuite.Api\HEJCareSuite.Api.csproj" />
   </ItemGroup>
 </Project>
