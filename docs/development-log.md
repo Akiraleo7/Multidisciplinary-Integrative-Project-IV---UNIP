@@ -112,3 +112,11 @@ The following evidence should be retained for the final report:
   Pull Request history.
 - Added the read-only `database/006_validation_queries.sql` script to collect
   database evidence without changing application data or schema state.
+
+## 2026-11-05 - Delivery baseline
+
+- Added GitHub Actions CI for restore, Release build, tests, and frontend syntax
+  validation on pushes and Pull Requests.
+- Added a multi-stage .NET 8 `Dockerfile` that publishes the API and web
+  application on port `8080`, leaving the SQL Server connection string to the
+  deployment environment.
