@@ -168,9 +168,11 @@ Every implemented feature must be mapped to:
 - Responsive UI and accessible interactions
 - Integration with all core APIs
 
-The current API also serves a first responsive web slice from
-`src/HEJCareSuite.Api/wwwroot`. It supports patient registration and listing
-through `/api/v1/patients`.
+The current API also serves a responsive web MVP from
+`src/HEJCareSuite.Api/wwwroot`. It supports authenticated patient registration,
+listing, editing, and deletion through `/api/v1/patients`, emergency triage
+through `/api/v1/patients/{patientId}/triage`, and hospitalization admission,
+history, and discharge through `/api/v1/patients/{patientId}/admissions`.
 
 The authentication baseline is initialized with `database/003_authentication_schema.sql`.
 It creates a PBKDF2-backed demo administrator for local validation; change the demo
@@ -181,7 +183,9 @@ the `PasswordHash` and `PasswordSalt` values for `admin@hejcare.local` in
 `dbo.UserAccount` through SSMS. Do not commit real passwords, hashes, or salts to Git.
 
 Emergency triage is initialized with `database/004_triage_schema.sql` and exposed
-through `/api/v1/patients/{patientId}/triage` for authenticated staff.
+through `/api/v1/patients/{patientId}/triage` for authenticated staff. The web
+interface supports patient selection, risk classification, chief complaint
+registration, and triage history.
 
 Hospital admission and discharge are initialized with
 `database/005_hospitalization_schema.sql` and exposed through:
@@ -189,6 +193,15 @@ Hospital admission and discharge are initialized with
 - `GET /api/v1/patients/{patientId}/admissions`
 - `POST /api/v1/patients/{patientId}/admissions`
 - `POST /api/v1/patients/{patientId}/admissions/{admissionId}/discharge`
+
+The web interface supports bed allocation, admission history, and discharge
+with mandatory notes. Exams, pharmacy, role-specific dashboards, and mobile
+client features remain planned scope and are not part of the current MVP.
+
+For SSMS evidence collection after applying schemas `001` through `005`, run the
+read-only queries in `database/006_validation_queries.sql`. The script reports
+schema versions, expected tables, constraints, indexes, audit triggers, row
+counts, and recent audit records.
 
 ### Mobile Application
 - Authentication
