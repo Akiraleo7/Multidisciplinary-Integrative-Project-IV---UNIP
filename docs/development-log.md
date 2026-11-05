@@ -124,3 +124,5 @@ The following evidence should be retained for the final report:
   all test projects. The workflow now supplies a non-secret test connection
   string required during API host startup and avoids duplicate runs on feature
   branch pushes plus pull requests.
+- Extended CI to build the deployment container, ensuring the root `Dockerfile`
+  remains valid before the project is deployed.
