@@ -54,6 +54,11 @@ app.UseDefaultFiles();
 app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapGet("/health", () => Results.Ok(new
+{
+    status = "ok",
+    service = "HEJCareSuite.Api"
+}));
 app.MapControllers();
 app.Run();
 

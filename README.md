@@ -297,7 +297,9 @@ The repository also includes a GitHub Actions CI workflow
 (`.github/workflows/ci.yml`) that restores, builds, tests, and validates frontend
 syntax on pushes and pull requests. The root `Dockerfile` publishes the API and
 web application as an ASP.NET Core container listening on port `8080`; the SQL
-Server connection string must be provided by the deployment environment.
+Server connection string must be provided by the deployment environment. The
+container smoke test endpoint is `GET /health`, which returns HTTP 200 when the
+API process is running.
 
 ---
 
