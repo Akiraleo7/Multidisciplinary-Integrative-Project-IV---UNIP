@@ -134,3 +134,5 @@ The following evidence should be retained for the final report:
   the first container deployment smoke test.
 - Added `docs/deployment-guide.md` with reproducible container commands, secret
   configuration guidance, smoke testing, and database deployment order.
+- Added `docs/release-readiness.md` with the presentation acceptance sequence,
+  database checks, demonstration flow, and explicitly deferred scope.

@@ -303,6 +303,8 @@ API process is running.
 
 The reproducible container build, run, smoke test, and database deployment order
 are documented in `docs/deployment-guide.md`.
+The final presentation acceptance sequence is documented in
+`docs/release-readiness.md`.
 
 ---
 
