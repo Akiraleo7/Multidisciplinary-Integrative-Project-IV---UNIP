@@ -301,6 +301,9 @@ Server connection string must be provided by the deployment environment. The
 container smoke test endpoint is `GET /health`, which returns HTTP 200 when the
 API process is running.
 
+The reproducible container build, run, smoke test, and database deployment order
+are documented in `docs/deployment-guide.md`.
+
 ---
 
 ## 14) Team Collaboration Notes

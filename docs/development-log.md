@@ -132,3 +132,5 @@ The following evidence should be retained for the final report:
 - Added unauthenticated `GET /health` returning a small service status payload.
 - Added an API integration test for the health endpoint and documented it as
   the first container deployment smoke test.
+- Added `docs/deployment-guide.md` with reproducible container commands, secret
+  configuration guidance, smoke testing, and database deployment order.
