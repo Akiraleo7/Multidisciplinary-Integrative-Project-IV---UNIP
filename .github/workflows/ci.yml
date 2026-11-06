@@ -37,3 +37,6 @@ jobs:
 
       - name: Validate frontend syntax
         run: node --check src/HEJCareSuite.Api/wwwroot/app.js
+
+      - name: Build deployment container
+        run: docker build --tag hejcare-suite:ci .
