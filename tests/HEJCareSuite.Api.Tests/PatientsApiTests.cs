@@ -19,6 +19,21 @@ namespace HEJCareSuite.Api.Tests;
 public sealed class PatientsApiTests
 {
     [Fact]
+    public async Task GetHealth_ReturnsOkWithoutAuthentication()
+    {
+        using var factory = new PatientsApiFactory();
+        using var client = factory.CreateClient();
+
+        var response = await client.GetAsync("/health");
+        var body = await response.Content.ReadFromJsonAsync<HealthResponse>();
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.NotNull(body);
+        Assert.Equal("ok", body.Status);
+        Assert.Equal("HEJCareSuite.Api", body.Service);
+    }
+
+    [Fact]
     public async Task PostPatients_ValidRequest_ReturnsCreatedPatient()
     {
         // Arrange
@@ -127,6 +142,7 @@ public sealed class PatientsApiTests
 }
 
 public sealed record ProblemDetailsResponse(string? Title, string? Detail);
+public sealed record HealthResponse(string Status, string Service);
 
 public sealed class PatientsApiFactory : WebApplicationFactory<Program>
 {

@@ -23,7 +23,7 @@ numbers must be filled with the project's actual Atlassian references.
 | NFR-01 - Secure authentication and session control | Implemented baseline | PBKDF2 password hashing; SQL `UserAccount`; HTTP-only `hejcare.auth` cookie | Authentication integration tests and login/logout walkthrough | To be filled |
 | NFR-02 - Audit trail for critical operations | Implemented baseline | `AuditLog`; SQL triggers for patients, triage, and hospitalization | SSMS queries showing audit records after CRUD operations | To be filled |
 | NFR-03 - Responsive web interface and mobile usability | Partially implemented | Responsive web UI in `wwwroot`; no native mobile client | Browser validation at desktop and narrow viewport sizes | To be filled |
-| NFR-04 - Availability suitable for hospital routine operations | Baseline only | Containerized development environment and health-oriented error handling | Build, test, and deployment checks still required | To be filled |
+| NFR-04 - Availability suitable for hospital routine operations | Baseline only | Containerized development environment and `GET /health` smoke endpoint | Build, test, container, and deployment checks still required | To be filled |
 | NFR-05 - Healthcare privacy-aligned data protection | Partially implemented | Secrets excluded from source; authenticated API; parameterized SQL | Security review and deployment configuration evidence required | To be filled |
 
 ## Business rules
