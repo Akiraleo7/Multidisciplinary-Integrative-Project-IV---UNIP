@@ -142,3 +142,6 @@ The following evidence should be retained for the final report:
   smoke test, functional demonstration, database evidence, and limitations.
 - Added `docs/api-reference.md` with the implemented MVP routes, request
   examples, authentication behavior, and expected HTTP status codes.
+- Added `docs/academic-report-outline.md` with an ABNT-oriented report
+  structure, evidence mapping, and explicit placeholders for real academic
+  data.
