@@ -63,15 +63,19 @@ A modular hospital platform that unifies clinical and administrative processes w
 
 ## 4) Scope (MVP for PIM IV)
 
-### In Scope
-- Authentication and role-based authorization
+### Presentation MVP Scope
+- Authentication baseline with authenticated API sessions
 - Patient registration and records
-- Emergency triage and care queue
-- Hospital admission/discharge workflow
-- Exam request and results visualization
-- Medication dispensing tracking
-- Basic dashboards and operational reports
-- Mobile app for staff task tracking and alerts
+- Emergency triage and risk classification
+- Hospital admission, bed allocation, history, and discharge
+- Responsive web interface served by the ASP.NET Core API
+- REST API, audit trail, CI validation, container packaging, and deployment smoke test
+
+### Planned Extensions
+- Complete role-based authorization and operational dashboards
+- Exam requests and results visualization
+- Prescription and medication dispensing workflow
+- Native mobile application for staff task tracking and alerts
 
 ### Out of Scope (current semester MVP)
 - Full financial billing engine
@@ -305,6 +309,8 @@ The reproducible container build, run, smoke test, and database deployment order
 are documented in `docs/deployment-guide.md`.
 The final presentation acceptance sequence is documented in
 `docs/release-readiness.md`.
+The recommended live demonstration sequence is documented in
+`docs/presentation-script.md`.
 
 ---
 
