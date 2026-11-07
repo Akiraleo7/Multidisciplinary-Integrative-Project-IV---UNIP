@@ -311,6 +311,8 @@ The final presentation acceptance sequence is documented in
 `docs/release-readiness.md`.
 The recommended live demonstration sequence is documented in
 `docs/presentation-script.md`.
+The implemented REST endpoints and request examples are documented in
+`docs/api-reference.md`.
 
 ---
 

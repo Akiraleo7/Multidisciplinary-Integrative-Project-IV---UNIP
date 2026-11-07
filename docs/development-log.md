@@ -140,3 +140,5 @@ The following evidence should be retained for the final report:
   planned exams, pharmacy, dashboards, and mobile extensions.
 - Added `docs/presentation-script.md` with the architecture explanation,
   smoke test, functional demonstration, database evidence, and limitations.
+- Added `docs/api-reference.md` with the implemented MVP routes, request
+  examples, authentication behavior, and expected HTTP status codes.
