@@ -313,6 +313,8 @@ The recommended live demonstration sequence is documented in
 `docs/presentation-script.md`.
 The implemented REST endpoints and request examples are documented in
 `docs/api-reference.md`.
+The report structure and evidence placeholders are maintained in
+`docs/academic-report-outline.md`.
 
 ---
 
