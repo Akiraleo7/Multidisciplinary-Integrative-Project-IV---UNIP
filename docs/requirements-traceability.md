@@ -14,7 +14,7 @@ numbers must be filled with the project's actual Atlassian references.
 | FR-04 - Request and track lab/radiology exams | Planned | No exam aggregate, schema, API, or UI is included in the current MVP | Define backlog acceptance criteria before implementation | To be filled |
 | FR-05 - Control medication dispensing through pharmacy workflow | Planned | No prescription or dispensing workflow is included in the current MVP | Define backlog acceptance criteria before implementation | To be filled |
 | FR-06 - Provide role-based dashboards for operations | Planned | Authentication exposes a role, but operational dashboards are not implemented | Define dashboard indicators and role permissions | To be filled |
-| FR-07 - Expose REST APIs for web/mobile integration | Partially implemented | Versioned REST endpoints under `/api/v1` support patients, triage, authentication, and hospitalization | API integration tests and endpoint walkthrough | To be filled |
+| FR-07 - Expose REST APIs for web/mobile integration | Implemented baseline | Versioned REST endpoints under `/api/v1` support patients, triage, authentication, and hospitalization | API integration tests and endpoint walkthrough; mobile client remains future consumer | To be filled |
 
 ## Non-functional requirements
 
@@ -23,7 +23,7 @@ numbers must be filled with the project's actual Atlassian references.
 | NFR-01 - Secure authentication and session control | Implemented baseline | PBKDF2 password hashing; SQL `UserAccount`; HTTP-only `hejcare.auth` cookie | Authentication integration tests and login/logout walkthrough | To be filled |
 | NFR-02 - Audit trail for critical operations | Implemented baseline | `AuditLog`; SQL triggers for patients, triage, and hospitalization | SSMS queries showing audit records after CRUD operations | To be filled |
 | NFR-03 - Responsive web interface and mobile usability | Partially implemented | Responsive web UI in `wwwroot`; no native mobile client | Browser validation at desktop and narrow viewport sizes | To be filled |
-| NFR-04 - Availability suitable for hospital routine operations | Baseline only | Containerized development environment and `GET /health` smoke endpoint | Build, test, container, and deployment checks still required | To be filled |
+| NFR-04 - Availability suitable for hospital routine operations | Implemented baseline | Containerized application, CI build/test gate, and `GET /health` smoke endpoint | GitHub Actions build/test/container checks; deployment smoke test | To be filled |
 | NFR-05 - Healthcare privacy-aligned data protection | Partially implemented | Secrets excluded from source; authenticated API; parameterized SQL | Security review and deployment configuration evidence required | To be filled |
 
 ## Business rules
@@ -43,3 +43,11 @@ The final report should attach or reference:
 3. SSMS queries showing schema versions, constraints, indexes, triggers, and audit records.
 4. API request/response examples for each implemented endpoint.
 5. Pull Requests and commits associated with each completed vertical slice.
+
+## Presentation scope decision
+
+The presentation release is the functional MVP composed of FR-01, FR-02, FR-03,
+the authentication baseline, audit trail, responsive web interface, REST API,
+CI, container packaging, and deployment smoke testing. FR-04, FR-05, FR-06,
+native mobile delivery, and the complete BR-01/BR-02/BR-03 workflows are
+documented as planned or partial scope and must not be presented as completed.
