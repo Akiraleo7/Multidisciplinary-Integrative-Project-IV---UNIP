@@ -136,3 +136,7 @@ The following evidence should be retained for the final report:
   configuration guidance, smoke testing, and database deployment order.
 - Added `docs/release-readiness.md` with the presentation acceptance sequence,
   database checks, demonstration flow, and explicitly deferred scope.
+- Corrected the README scope section so the presentation MVP is separated from
+  planned exams, pharmacy, dashboards, and mobile extensions.
+- Added `docs/presentation-script.md` with the architecture explanation,
+  smoke test, functional demonstration, database evidence, and limitations.
