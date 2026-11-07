@@ -40,3 +40,21 @@ jobs:
 
       - name: Build deployment container
         run: docker build --tag hejcare-suite:ci .
+
+      - name: Smoke test deployment container
+        run: |
+          docker run --detach --name hejcare-suite-ci --publish 18080:8080 \
+            --env "ConnectionStrings__SqlServer=Server=localhost;Database=HEJCareSuite;Integrated Security=True;TrustServerCertificate=True" \
+            hejcare-suite:ci
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent --show-error http://localhost:18080/health; then
+              exit 0
+            fi
+            sleep 2
+          done
+          docker logs hejcare-suite-ci
+          exit 1
+
+      - name: Remove deployment container
+        if: always()
+        run: docker rm --force hejcare-suite-ci || true
