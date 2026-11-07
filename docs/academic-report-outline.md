@@ -80,12 +80,13 @@ sources must be verified before inclusion.
 
 ## 4 Methodology
 
-Describe Scrum-oriented incremental delivery, vertical slices, Pull Requests,
-Codespaces, SQL Server/SSMS validation, and automated CI. Include the actual
-team workflow and sprint data supplied by the team; do not infer Jira keys or
-sprint numbers from Git history.
+Describe incremental vertical-slice delivery, Pull Requests, Codespaces, SQL
+Server/SSMS validation, and automated CI. Jira and Confluence were planned in
+the initial process model but were not actively used; report Git, Pull Request,
+Codespaces, SSMS, and CI as the actual project evidence sources.
 
-Evidence: `docs/development-log.md`, Pull Requests, Jira, and Confluence.
+Evidence: `docs/development-log.md`, Pull Requests, Git history, SSMS output,
+and CI logs.
 
 ## 5 Requirements and traceability
 

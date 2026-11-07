@@ -1,30 +1,31 @@
 # HEJ Care Suite - Requirements Traceability Matrix
 
 This matrix records the current MVP implementation status and identifies the
-evidence required for the final academic report. Jira issue keys and sprint
-numbers must be filled with the project's actual Atlassian references.
+evidence required for the final academic report. Jira and Confluence were part
+of the original process plan but were not used as active project tools; Git,
+Pull Requests, Codespaces, SSMS, and CI are the actual evidence sources.
 
 ## Functional requirements
 
 | Requirement | Current status | Implementation evidence | Validation evidence | Jira / Sprint |
 | --- | --- | --- | --- | --- |
-| FR-01 - Register and manage patients | Implemented | `Patient`; `PatientsController`; `SqlPatientRepository`; responsive patient UI | Domain, Application, and API tests; CRUD walkthrough | To be filled |
-| FR-02 - Register emergency triage and risk classification | Implemented | `Triage`; `TriageController`; `004_triage_schema.sql`; triage UI | Domain, Application, and API workflow validation | To be filled |
-| FR-03 - Manage hospitalization admission, bed allocation, and discharge | Implemented | `HospitalAdmission`; `HospitalizationController`; `005_hospitalization_schema.sql`; hospitalization UI | Domain and Application tests; admission/discharge walkthrough | To be filled |
-| FR-04 - Request and track lab/radiology exams | Planned | No exam aggregate, schema, API, or UI is included in the current MVP | Define backlog acceptance criteria before implementation | To be filled |
-| FR-05 - Control medication dispensing through pharmacy workflow | Planned | No prescription or dispensing workflow is included in the current MVP | Define backlog acceptance criteria before implementation | To be filled |
-| FR-06 - Provide role-based dashboards for operations | Planned | Authentication exposes a role, but operational dashboards are not implemented | Define dashboard indicators and role permissions | To be filled |
-| FR-07 - Expose REST APIs for web/mobile integration | Implemented baseline | Versioned REST endpoints under `/api/v1` support patients, triage, authentication, and hospitalization | API integration tests and endpoint walkthrough; mobile client remains future consumer | To be filled |
+| FR-01 - Register and manage patients | Implemented | `Patient`; `PatientsController`; `SqlPatientRepository`; responsive patient UI | Domain, Application, and API tests; CRUD walkthrough | Git/PR evidence |
+| FR-02 - Register emergency triage and risk classification | Implemented | `Triage`; `TriageController`; `004_triage_schema.sql`; triage UI | Domain, Application, and API workflow validation | Git/PR evidence |
+| FR-03 - Manage hospitalization admission, bed allocation, and discharge | Implemented | `HospitalAdmission`; `HospitalizationController`; `005_hospitalization_schema.sql`; hospitalization UI | Domain and Application tests; admission/discharge walkthrough | Git/PR evidence |
+| FR-04 - Request and track lab/radiology exams | Planned | No exam aggregate, schema, API, or UI is included in the current MVP | Deferred after presentation | Backlog only |
+| FR-05 - Control medication dispensing through pharmacy workflow | Planned | No prescription or dispensing workflow is included in the current MVP | Deferred after presentation | Backlog only |
+| FR-06 - Provide role-based dashboards for operations | Planned | Authentication exposes a role, but operational dashboards are not implemented | Deferred after presentation | Backlog only |
+| FR-07 - Expose REST APIs for web/mobile integration | Implemented baseline | Versioned REST endpoints under `/api/v1` support patients, triage, authentication, and hospitalization | API integration tests and endpoint walkthrough; mobile client remains future consumer | Git/PR evidence |
 
 ## Non-functional requirements
 
 | Requirement | Current status | Implementation evidence | Validation evidence | Jira / Sprint |
 | --- | --- | --- | --- | --- |
-| NFR-01 - Secure authentication and session control | Implemented baseline | PBKDF2 password hashing; SQL `UserAccount`; HTTP-only `hejcare.auth` cookie | Authentication integration tests and login/logout walkthrough | To be filled |
-| NFR-02 - Audit trail for critical operations | Implemented baseline | `AuditLog`; SQL triggers for patients, triage, and hospitalization | SSMS queries showing audit records after CRUD operations | To be filled |
-| NFR-03 - Responsive web interface and mobile usability | Partially implemented | Responsive web UI in `wwwroot`; no native mobile client | Browser validation at desktop and narrow viewport sizes | To be filled |
-| NFR-04 - Availability suitable for hospital routine operations | Implemented baseline | Containerized application, CI build/test gate, and `GET /health` smoke endpoint | GitHub Actions build/test/container checks; deployment smoke test | To be filled |
-| NFR-05 - Healthcare privacy-aligned data protection | Partially implemented | Secrets excluded from source; authenticated API; parameterized SQL | Security review and deployment configuration evidence required | To be filled |
+| NFR-01 - Secure authentication and session control | Implemented baseline | PBKDF2 password hashing; SQL `UserAccount`; HTTP-only `hejcare.auth` cookie | Authentication integration tests and login/logout walkthrough | Git/CI evidence |
+| NFR-02 - Audit trail for critical operations | Implemented baseline | `AuditLog`; SQL triggers for patients, triage, and hospitalization | SSMS queries showing audit records after CRUD operations | SSMS evidence |
+| NFR-03 - Responsive web interface and mobile usability | Partially implemented | Responsive web UI in `wwwroot`; no native mobile client | Browser validation at desktop and narrow viewport sizes | Screenshot evidence |
+| NFR-04 - Availability suitable for hospital routine operations | Implemented baseline | Containerized application, CI build/test gate, and `GET /health` smoke endpoint | GitHub Actions build/test/container checks; deployment smoke test | CI/deploy evidence |
+| NFR-05 - Healthcare privacy-aligned data protection | Partially implemented | Secrets excluded from source; authenticated API; parameterized SQL | Deployment configuration evidence; hardening deferred | Code/config evidence |
 
 ## Business rules
 

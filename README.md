@@ -247,8 +247,11 @@ counts, and recent audit records.
 - Artifacts: Product Backlog, Sprint Backlog, Increment, Definition of Done
 
 ### Atlassian Usage
-- **Jira:** Backlog, sprint planning, Kanban/Scrum board, issue workflow, burndown
-- **Confluence:** Technical documentation, architecture decisions, meeting notes, test evidence, deployment guides
+
+Jira and Confluence were included in the original project plan but were not used
+as active tools in this implementation. The actual evidence sources are GitHub
+branches and Pull Requests, GitHub Actions, Codespaces, SSMS, and repository
+documentation.
 
 ### Suggested Jira Workflow
 `Backlog -> Selected for Sprint -> In Progress -> Code Review -> Testing -> Done`
