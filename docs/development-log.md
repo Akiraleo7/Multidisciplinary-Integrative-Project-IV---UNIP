@@ -145,3 +145,8 @@ The following evidence should be retained for the final report:
 - Added `docs/academic-report-outline.md` with an ABNT-oriented report
   structure, evidence mapping, and explicit placeholders for real academic
   data.
+- Clarified that Jira and Confluence were planned but not actively used; the
+  report must cite the actual Git, Pull Request, Codespaces, SSMS, and CI
+  evidence instead.
+- Added `docs/final-validation-runbook.md` with the end-to-end validation and
+  evidence capture sequence for the presentation release.
