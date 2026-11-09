@@ -150,3 +150,13 @@ The following evidence should be retained for the final report:
   evidence instead.
 - Added `docs/final-validation-runbook.md` with the end-to-end validation and
   evidence capture sequence for the presentation release.
+
+## 2026-11-09 - Final MVP validation
+
+- Completed the final Codespace validation described in
+  `docs/final-validation-runbook.md`.
+- Confirmed successful build, automated tests, frontend syntax validation,
+  database validation script execution, application startup, authentication,
+  patient workflows, bed operations, and audit records.
+- Kept the existing database intact; no database deletion or recreation was
+  required for the final validation.
