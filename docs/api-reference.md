@@ -7,6 +7,11 @@ reuse the returned HTTP cookie for protected endpoints.
 
 ## Health and authentication
 
+The health endpoint is a technical availability probe, not a clinical
+dashboard. It stays unauthenticated so a container runtime, load balancer,
+operator, or CI job can confirm that the API process is reachable before
+testing protected workflows.
+
 | Method | Route | Authentication | Success |
 | --- | --- | --- | --- |
 | GET | `/health` | None | `200 OK` with service status |
