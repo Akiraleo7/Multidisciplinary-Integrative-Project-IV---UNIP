@@ -45,11 +45,19 @@ Codespace SQL Server and that `MSSQL_SA_PASSWORD` is supplied as a secret.
 Then open the forwarded application URL and verify:
 
 1. `GET /health` returns HTTP 200.
-2. Login succeeds.
+2. Login succeeds with the local demonstration account:
+   - Email: `admin@hejcare.local`
+   - Password: `ChangeMe123!`
 3. Patient create, list, edit, and delete work.
 4. Triage registration and history work.
 5. Admission, bed allocation, history, and discharge work.
 6. Logout blocks protected operations.
+
+`MSSQL_SA_PASSWORD` is the SQL Server `sa` password and is not the
+application login password. The demonstration account is inserted by
+`database/003_authentication_schema.sql`. If that account already existed with
+another password, the idempotent script does not overwrite it; verify the
+account in SSMS before the presentation.
 
 ## 5. Capture final evidence
 
