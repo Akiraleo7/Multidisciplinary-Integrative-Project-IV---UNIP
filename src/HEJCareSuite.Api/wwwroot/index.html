@@ -1,4 +1,11 @@
 <!doctype html>
+<!--
+THESIS: A calm clinical workspace that makes the next safe action obvious instead of stacking every workflow on one page.
+OWN-WORLD: Ink navy, surgical teal, warm paper, precise borders, and compact line icons create a trustworthy operations desk.
+STORY: Staff sign in, orient themselves on the dashboard, then move through one focused workflow at a time.
+FIRST VIEWPORT: A focused login gate becomes a persistent sidebar shell with a useful dashboard and clear module navigation.
+FORM: Operate mode; sidebar workspace with dedicated task views, selected to reduce cognitive load during clinical administration.
+-->
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -7,107 +14,216 @@
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <main class="shell">
-    <header class="hero">
-      <p class="eyebrow">HEJ Care Suite</p>
-      <h1>Patient intake</h1>
-      <p class="subtitle">Register and review patients through the hospital API.</p>
-    </header>
-
-    <form id="login-form" class="card login-card">
-      <h2>Staff login</h2>
-      <div class="login-fields">
-        <input name="email" type="email" placeholder="Email" required autocomplete="username">
-        <input name="password" type="password" placeholder="Password" required autocomplete="current-password">
-        <button type="submit">Sign in</button>
-        <button id="logout-button" class="secondary" type="button">Sign out</button>
+  <div id="login-screen" class="login-screen">
+    <div class="login-visual">
+      <div class="brand-mark brand-mark-large" aria-hidden="true">H</div>
+      <p class="brand-kicker">HEJ Care Suite</p>
+      <h1>One clear workspace for every patient handoff.</h1>
+      <p>Coordinate intake, triage, beds, and discharge from a single clinical operations desk.</p>
+      <div class="login-visual-footer">
+        <span class="live-dot"></span>
+        Local clinical workspace
       </div>
+    </div>
+    <form id="login-form" class="login-panel">
+      <div class="login-panel-heading">
+        <p class="eyebrow">Staff access</p>
+        <h2>Welcome back</h2>
+        <p>Sign in to continue to the hospital workspace.</p>
+      </div>
+      <label>
+        Email
+        <input name="email" type="email" placeholder="you@hospital.local" required autocomplete="username">
+      </label>
+      <label>
+        Password
+        <input name="password" type="password" placeholder="Enter your password" required autocomplete="current-password">
+      </label>
+      <button class="button button-primary button-wide" type="submit">Sign in <span aria-hidden="true">-&gt;</span></button>
       <p id="login-status" class="status" role="status"></p>
+      <p class="login-note">Use the configured staff account for this local demonstration.</p>
     </form>
+  </div>
 
-    <section class="grid" aria-label="Patient management">
-      <form id="patient-form" class="card">
-        <h2 id="form-title">Register patient</h2>
-        <label>
-          Full name
-          <input name="fullName" required maxlength="200" autocomplete="name">
-        </label>
-        <label>
-          Birth date
-          <input name="birthDate" type="date" required>
-        </label>
-        <label>
-          Document number
-          <input name="documentNumber" required maxlength="40">
-        </label>
-        <button id="submit-button" type="submit">Save patient</button>
-        <button id="cancel-button" class="secondary hidden" type="button">Cancel edit</button>
-        <p id="form-status" class="status" role="status"></p>
-      </form>
-
-      <section class="card">
-        <div class="section-heading">
-          <h2>Patients</h2>
-          <button id="refresh-button" class="secondary" type="button">Refresh</button>
+  <div id="app-shell" class="app-shell hidden">
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <a class="brand" href="#" data-view-link="dashboard-view">
+          <span class="brand-mark" aria-hidden="true">H</span>
+          <span>
+            <strong>HEJ Care</strong>
+            <small>Clinical workspace</small>
+          </span>
+        </a>
+        <div class="sidebar-label">Workspace</div>
+        <nav class="main-nav" aria-label="Main navigation">
+          <button class="nav-item active" type="button" data-view="dashboard-view">
+            <span class="nav-icon" aria-hidden="true">+</span>
+            <span>Overview</span>
+          </button>
+          <button class="nav-item" type="button" data-view="patients-view">
+            <span class="nav-icon" aria-hidden="true">P</span>
+            <span>Patients</span>
+          </button>
+          <button class="nav-item" type="button" data-view="triage-view">
+            <span class="nav-icon" aria-hidden="true">T</span>
+            <span>Emergency triage</span>
+          </button>
+          <button class="nav-item" type="button" data-view="admissions-view">
+            <span class="nav-icon" aria-hidden="true">B</span>
+            <span>Beds &amp; admissions</span>
+          </button>
+        </nav>
+      </div>
+      <div class="sidebar-bottom">
+        <div class="system-status">
+          <span class="live-dot"></span>
+          <span><strong>System online</strong><small>API health verified</small></span>
         </div>
-        <p id="list-status" class="status" role="status">Loading patients...</p>
-        <ul id="patient-list" class="patient-list"></ul>
-      </section>
-    </section>
-
-    <section id="triage-section" class="card hidden" aria-label="Emergency triage">
-      <div class="section-heading">
-        <div>
-          <h2>Emergency triage</h2>
-          <p id="triage-patient" class="muted">Select a patient to manage triage.</p>
+        <div class="user-profile">
+          <span id="user-avatar" class="avatar">A</span>
+          <span class="user-copy"><strong id="user-name">Staff member</strong><small id="user-role">Administrator</small></span>
+          <button id="logout-button" class="icon-button" type="button" title="Sign out" aria-label="Sign out">↗</button>
         </div>
       </div>
-      <form id="triage-form">
-        <label>
-          Risk level
-          <select name="riskLevel" required>
-            <option value="1">Blue</option>
-            <option value="2">Green</option>
-            <option value="3" selected>Yellow</option>
-            <option value="4">Red</option>
-          </select>
-        </label>
-        <label>
-          Chief complaint
-          <textarea name="chiefComplaint" required maxlength="2000" rows="3"></textarea>
-        </label>
-        <button type="submit">Register triage</button>
-        <p id="triage-status" class="status" role="status"></p>
-      </form>
-      <h3>History</h3>
-      <p id="triage-list-status" class="status"></p>
-      <ul id="triage-list" class="triage-list"></ul>
-    </section>
+    </aside>
 
-    <section id="admission-section" class="card hidden" aria-label="Hospital admission">
-      <h2>Hospital admission</h2>
-      <p id="admission-patient" class="muted">Select a patient to manage admission.</p>
-      <form id="admission-form">
-        <label>
-          Bed number
-          <input name="bedNumber" required maxlength="40">
-        </label>
-        <button type="submit">Admit patient</button>
-        <p id="admission-status" class="status" role="status"></p>
-      </form>
-      <form id="discharge-form" class="hidden">
-        <label>
-          Discharge notes
-          <textarea name="dischargeNotes" required maxlength="2000" rows="3"></textarea>
-        </label>
-        <button type="submit">Discharge selected admission</button>
-        <button id="cancel-discharge-button" class="secondary" type="button">Cancel</button>
-      </form>
-      <h3>Admission history</h3>
-      <p id="admission-list-status" class="status"></p>
-      <ul id="admission-list" class="admission-list"></ul>
-    </section>
-  </main>
+    <main class="main-content">
+      <header class="topbar">
+        <button id="mobile-menu-button" class="icon-button mobile-menu-button" type="button" aria-label="Open navigation">☰</button>
+        <div>
+          <p class="topbar-context">HEJ Care Suite / <span id="breadcrumb-label">Overview</span></p>
+          <h1 id="page-title">Good morning, <span id="page-user-name">Administrator</span></h1>
+        </div>
+        <div class="topbar-actions">
+          <span class="connection-pill"><span class="live-dot"></span> Connected</span>
+          <span id="topbar-date" class="topbar-date"></span>
+        </div>
+      </header>
+
+      <div class="view-stack">
+        <section id="dashboard-view" class="page-view" aria-labelledby="dashboard-title">
+          <div class="view-heading">
+            <div>
+              <p class="eyebrow">Clinical operations</p>
+              <h2 id="dashboard-title">Your workspace at a glance</h2>
+              <p>Move from orientation to action without losing the patient context.</p>
+            </div>
+            <button class="button button-primary" type="button" data-view-target="patients-view">Register patient <span aria-hidden="true">+</span></button>
+          </div>
+          <div class="metric-grid">
+            <article class="metric-card metric-card-accent">
+              <span class="metric-label">Registered patients</span>
+              <strong id="patient-count">0</strong>
+              <span class="metric-note">Current database records</span>
+            </article>
+            <article class="metric-card">
+              <span class="metric-label">Care workflows</span>
+              <strong>03</strong>
+              <span class="metric-note">Patients, triage, admissions</span>
+            </article>
+            <article class="metric-card">
+              <span class="metric-label">Audit protection</span>
+              <strong>On</strong>
+              <span class="metric-note">SQL Server activity tracking</span>
+            </article>
+          </div>
+          <div class="dashboard-grid">
+            <section class="workspace-panel quick-actions-panel">
+              <div class="panel-heading">
+                <div>
+                  <h3>Quick actions</h3>
+                  <p>Start the next operational task.</p>
+                </div>
+              </div>
+              <div class="quick-actions">
+                <button class="action-row" type="button" data-view-target="patients-view">
+                  <span class="action-icon action-icon-teal">P</span>
+                  <span><strong>Manage patients</strong><small>Register, edit, review, or remove records</small></span>
+                  <span class="action-arrow" aria-hidden="true">-&gt;</span>
+                </button>
+                <button class="action-row" type="button" data-view-target="triage-view">
+                  <span class="action-icon action-icon-red">T</span>
+                  <span><strong>Open emergency triage</strong><small>Record risk and review patient history</small></span>
+                  <span class="action-arrow" aria-hidden="true">-&gt;</span>
+                </button>
+                <button class="action-row" type="button" data-view-target="admissions-view">
+                  <span class="action-icon action-icon-purple">B</span>
+                  <span><strong>Manage beds &amp; admissions</strong><small>Allocate beds and complete discharge</small></span>
+                  <span class="action-arrow" aria-hidden="true">-&gt;</span>
+                </button>
+              </div>
+            </section>
+            <section class="workspace-panel">
+              <div class="panel-heading">
+                <div>
+                  <h3>Operational promise</h3>
+                  <p>What this workspace keeps visible.</p>
+                </div>
+              </div>
+              <ul class="promise-list">
+                <li><span class="promise-check">✓</span><span><strong>One patient context</strong><small>Each workflow keeps the selected patient in view.</small></span></li>
+                <li><span class="promise-check">✓</span><span><strong>Traceable actions</strong><small>Patient, triage, and admission changes are audited.</small></span></li>
+                <li><span class="promise-check">✓</span><span><strong>Safe handoffs</strong><small>Discharge notes are required before closing an admission.</small></span></li>
+              </ul>
+            </section>
+          </div>
+        </section>
+
+        <section id="patients-view" class="page-view hidden" aria-labelledby="patients-title">
+          <div class="view-heading">
+            <div><p class="eyebrow">Patient registry</p><h2 id="patients-title">Patients</h2><p>Create and maintain the records used by every care workflow.</p></div>
+            <button id="refresh-button" class="button button-secondary" type="button">Refresh list</button>
+          </div>
+          <div class="content-grid">
+            <form id="patient-form" class="workspace-panel form-panel">
+              <div class="panel-heading"><div><h3 id="form-title">Register patient</h3><p>Keep identity data complete and accurate.</p></div><span class="panel-step">01</span></div>
+              <label>Full name<input name="fullName" required maxlength="200" autocomplete="name"></label>
+              <label>Birth date<input name="birthDate" type="date" required></label>
+              <label>Document number<input name="documentNumber" required maxlength="40"></label>
+              <div class="form-actions"><button id="submit-button" class="button button-primary" type="submit">Save patient</button><button id="cancel-button" class="button button-secondary hidden" type="button">Cancel edit</button></div>
+              <p id="form-status" class="status" role="status"></p>
+            </form>
+            <section class="workspace-panel list-panel">
+              <div class="panel-heading"><div><h3>Patient records</h3><p>Select a patient to continue a care workflow.</p></div><span class="panel-count" id="patient-list-count">0 records</span></div>
+              <p id="list-status" class="status" role="status">Sign in to load patients.</p>
+              <ul id="patient-list" class="patient-list"></ul>
+            </section>
+          </div>
+        </section>
+
+        <section id="triage-view" class="page-view hidden" aria-labelledby="triage-title">
+          <div class="view-heading"><div><p class="eyebrow">Emergency care</p><h2 id="triage-title">Emergency triage</h2><p>Capture risk clearly so the next team can act with context.</p></div><span class="module-status module-status-red">Clinical priority</span></div>
+          <section class="workspace-panel workflow-panel">
+            <div class="workflow-context"><div><span class="context-label">Selected patient</span><h3 id="triage-patient">Choose a patient from the registry</h3></div><button class="button button-secondary" type="button" data-view-target="patients-view">Open patients</button></div>
+            <form id="triage-form" class="workflow-form">
+              <label>Risk level<select name="riskLevel" required><option value="1">Blue - non-urgent</option><option value="2">Green - low risk</option><option value="3" selected>Yellow - needs attention</option><option value="4">Red - emergency</option></select></label>
+              <label>Chief complaint<textarea name="chiefComplaint" required maxlength="2000" rows="4" placeholder="Describe the patient's main complaint..."></textarea></label>
+              <button class="button button-primary" type="submit">Register triage</button><p id="triage-status" class="status" role="status"></p>
+            </form>
+            <div class="history-block"><div class="panel-heading"><div><h3>Patient triage history</h3><p>Recent records for the selected patient.</p></div></div><p id="triage-list-status" class="status"></p><ul id="triage-list" class="triage-list"></ul></div>
+          </section>
+        </section>
+
+        <section id="admissions-view" class="page-view hidden" aria-labelledby="admissions-title">
+          <div class="view-heading"><div><p class="eyebrow">Inpatient care</p><h2 id="admissions-title">Beds &amp; admissions</h2><p>Coordinate bed allocation, active stays, and safe discharge.</p></div><span class="module-status module-status-purple">Inpatient workflow</span></div>
+          <section class="workspace-panel workflow-panel">
+            <div class="workflow-context"><div><span class="context-label">Selected patient</span><h3 id="admission-patient">Choose a patient from the registry</h3></div><button class="button button-secondary" type="button" data-view-target="patients-view">Open patients</button></div>
+            <form id="admission-form" class="workflow-form inline-form">
+              <label>Bed number<input name="bedNumber" required maxlength="40" placeholder="e.g. ICU-04"></label>
+              <button class="button button-primary" type="submit">Admit patient</button>
+              <p id="admission-status" class="status" role="status"></p>
+            </form>
+            <form id="discharge-form" class="workflow-form hidden">
+              <label>Discharge notes<textarea name="dischargeNotes" required maxlength="2000" rows="3" placeholder="Record the handoff and discharge observations..."></textarea></label>
+              <div class="form-actions"><button class="button button-primary" type="submit">Complete discharge</button><button id="cancel-discharge-button" class="button button-secondary" type="button">Cancel</button></div>
+            </form>
+            <div class="history-block"><div class="panel-heading"><div><h3>Admission history</h3><p>Active and completed stays for the selected patient.</p></div></div><p id="admission-list-status" class="status"></p><ul id="admission-list" class="admission-list"></ul></div>
+          </section>
+        </section>
+      </div>
+    </main>
+  </div>
   <script src="/app.js"></script>
 </body>
 </html>

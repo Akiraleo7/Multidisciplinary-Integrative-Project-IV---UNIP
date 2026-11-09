@@ -1,3 +1,19 @@
+const loginScreen = document.querySelector("#login-screen");
+const appShell = document.querySelector("#app-shell");
+const loginForm = document.querySelector("#login-form");
+const loginStatus = document.querySelector("#login-status");
+const logoutButton = document.querySelector("#logout-button");
+const userName = document.querySelector("#user-name");
+const userRole = document.querySelector("#user-role");
+const userAvatar = document.querySelector("#user-avatar");
+const pageUserName = document.querySelector("#page-user-name");
+const pageTitle = document.querySelector("#page-title");
+const breadcrumbLabel = document.querySelector("#breadcrumb-label");
+const topbarDate = document.querySelector("#topbar-date");
+const mobileMenuButton = document.querySelector("#mobile-menu-button");
+const sidebar = document.querySelector(".sidebar");
+const patientCount = document.querySelector("#patient-count");
+const patientListCount = document.querySelector("#patient-list-count");
 const form = document.querySelector("#patient-form");
 const formStatus = document.querySelector("#form-status");
 const listStatus = document.querySelector("#list-status");
@@ -5,16 +21,11 @@ const patientList = document.querySelector("#patient-list");
 const formTitle = document.querySelector("#form-title");
 const submitButton = document.querySelector("#submit-button");
 const cancelButton = document.querySelector("#cancel-button");
-const loginForm = document.querySelector("#login-form");
-const loginStatus = document.querySelector("#login-status");
-const logoutButton = document.querySelector("#logout-button");
-const triageSection = document.querySelector("#triage-section");
 const triageForm = document.querySelector("#triage-form");
 const triagePatient = document.querySelector("#triage-patient");
 const triageStatus = document.querySelector("#triage-status");
 const triageListStatus = document.querySelector("#triage-list-status");
 const triageList = document.querySelector("#triage-list");
-const admissionSection = document.querySelector("#admission-section");
 const admissionForm = document.querySelector("#admission-form");
 const admissionPatient = document.querySelector("#admission-patient");
 const admissionStatus = document.querySelector("#admission-status");
@@ -26,31 +37,69 @@ let editingPatientId = null;
 let selectedTriagePatient = null;
 let selectedAdmissionPatient = null;
 let selectedAdmissionId = null;
+let currentUser = null;
+let patients = [];
+
+const viewLabels = {
+  "dashboard-view": "Overview",
+  "patients-view": "Patients",
+  "triage-view": "Emergency triage",
+  "admissions-view": "Beds & admissions"
+};
+
+function showView(viewId) {
+  document.querySelectorAll(".page-view").forEach((view) => {
+    view.classList.toggle("hidden", view.id !== viewId);
+  });
+  document.querySelectorAll(".nav-item").forEach((item) => {
+    item.classList.toggle("active", item.dataset.view === viewId);
+  });
+  const label = viewLabels[viewId] || "Overview";
+  breadcrumbLabel.textContent = label;
+  pageTitle.innerHTML = viewId === "dashboard-view"
+    ? `Good morning, <span id="page-user-name">${escapeHtml(currentUser?.role || "Administrator")}</span>`
+    : label;
+  sidebar.classList.remove("open");
+  if (viewId === "patients-view") loadPatients();
+}
+
+function openWorkspace(user) {
+  currentUser = user;
+  const displayName = user.role || user.email || "Staff member";
+  userName.textContent = displayName;
+  userRole.textContent = user.email || "Administrator";
+  pageUserName.textContent = displayName;
+  userAvatar.textContent = displayName.slice(0, 1).toUpperCase();
+  loginScreen.classList.add("hidden");
+  appShell.classList.remove("hidden");
+  showView("dashboard-view");
+  loadPatients();
+}
+
+function closeWorkspace() {
+  currentUser = null;
+  patients = [];
+  appShell.classList.add("hidden");
+  loginScreen.classList.remove("hidden");
+  loginForm.reset();
+  loginStatus.textContent = "Signed out.";
+  patientList.replaceChildren();
+  clearTriage();
+  clearAdmission();
+  endEdit();
+}
 
 async function loadPatients() {
-  listStatus.textContent = "Loading patients...";
+  listStatus.textContent = "Loading patient records...";
   listStatus.classList.remove("error");
   try {
     const response = await fetch("/api/v1/patients");
     if (!response.ok) throw await readApiError(response, "Could not load patients.");
-    const patients = await response.json();
+    patients = await response.json();
+    patientCount.textContent = patients.length;
+    patientListCount.textContent = `${patients.length} record${patients.length === 1 ? "" : "s"}`;
     patientList.replaceChildren();
-    patients.forEach((patient) => {
-      const item = document.createElement("li");
-      item.innerHTML = `<strong>${escapeHtml(patient.fullName)}</strong>
-        <span>${patient.birthDate} · ${escapeHtml(patient.documentNumber)}</span>
-        <span class="patient-actions">
-          <button class="edit-button" type="button">Edit</button>
-          <button class="delete-button" type="button">Delete</button>
-          <button class="triage-button" type="button">Triage</button>
-          <button class="admission-button" type="button">Admission</button>
-        </span>`;
-      item.querySelector(".edit-button").addEventListener("click", () => beginEdit(patient));
-      item.querySelector(".delete-button").addEventListener("click", () => deletePatient(patient));
-      item.querySelector(".triage-button").addEventListener("click", () => selectTriagePatient(patient));
-      item.querySelector(".admission-button").addEventListener("click", () => selectAdmissionPatient(patient));
-      patientList.append(item);
-    });
+    patients.forEach(renderPatient);
     listStatus.textContent = patients.length ? "" : "No patients registered yet.";
   } catch (error) {
     listStatus.textContent = error.message;
@@ -58,18 +107,35 @@ async function loadPatients() {
   }
 }
 
+function renderPatient(patient) {
+  const item = document.createElement("li");
+  item.innerHTML = `<strong>${escapeHtml(patient.fullName)}</strong>
+    <span>${patient.birthDate} · ${escapeHtml(patient.documentNumber)}</span>
+    <span class="patient-actions">
+      <button class="edit-button" type="button">Edit</button>
+      <button class="delete-button" type="button">Delete</button>
+      <button class="triage-button" type="button">Triage</button>
+      <button class="admission-button" type="button">Admission</button>
+    </span>`;
+  item.querySelector(".edit-button").addEventListener("click", () => beginEdit(patient));
+  item.querySelector(".delete-button").addEventListener("click", () => deletePatient(patient));
+  item.querySelector(".triage-button").addEventListener("click", () => selectTriagePatient(patient));
+  item.querySelector(".admission-button").addEventListener("click", () => selectAdmissionPatient(patient));
+  patientList.append(item);
+}
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
-  formStatus.textContent = "Saving...";
+  formStatus.textContent = "Saving patient...";
   formStatus.classList.remove("error");
   const data = Object.fromEntries(new FormData(form));
   try {
     const response = await fetch(
       editingPatientId ? `/api/v1/patients/${editingPatientId}` : "/api/v1/patients",
       {
-      method: editingPatientId ? "PUT" : "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
+        method: editingPatientId ? "PUT" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
       });
     if (!response.ok) throw await readApiError(response, "Could not save patient.");
     form.reset();
@@ -84,19 +150,21 @@ form.addEventListener("submit", async (event) => {
 
 triageForm.addEventListener("submit", async (event) => {
   event.preventDefault();
-  if (!selectedTriagePatient) return;
-  triageStatus.textContent = "Saving...";
+  if (!selectedTriagePatient) {
+    triageStatus.textContent = "Choose a patient from the Patients screen first.";
+    triageStatus.classList.add("error");
+    return;
+  }
+  triageStatus.textContent = "Saving triage...";
   triageStatus.classList.remove("error");
   const data = Object.fromEntries(new FormData(triageForm));
   data.riskLevel = Number(data.riskLevel);
   try {
-    const response = await fetch(
-      `/api/v1/patients/${selectedTriagePatient.id}/triage`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      });
+    const response = await fetch(`/api/v1/patients/${selectedTriagePatient.id}/triage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
     if (!response.ok) throw await readApiError(response, "Could not register triage.");
     triageForm.reset();
     triageForm.elements.riskLevel.value = "3";
@@ -110,17 +178,19 @@ triageForm.addEventListener("submit", async (event) => {
 
 admissionForm.addEventListener("submit", async (event) => {
   event.preventDefault();
-  if (!selectedAdmissionPatient) return;
-  admissionStatus.textContent = "Saving...";
+  if (!selectedAdmissionPatient) {
+    admissionStatus.textContent = "Choose a patient from the Patients screen first.";
+    admissionStatus.classList.add("error");
+    return;
+  }
+  admissionStatus.textContent = "Saving admission...";
   admissionStatus.classList.remove("error");
   try {
-    const response = await fetch(
-      `/api/v1/patients/${selectedAdmissionPatient.id}/admissions`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(Object.fromEntries(new FormData(admissionForm)))
-      });
+    const response = await fetch(`/api/v1/patients/${selectedAdmissionPatient.id}/admissions`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(Object.fromEntries(new FormData(admissionForm)))
+    });
     if (!response.ok) throw await readApiError(response, "Could not admit patient.");
     admissionForm.reset();
     admissionStatus.textContent = "Patient admitted.";
@@ -134,16 +204,14 @@ admissionForm.addEventListener("submit", async (event) => {
 dischargeForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   if (!selectedAdmissionPatient || !selectedAdmissionId) return;
-  admissionListStatus.textContent = "Saving...";
+  admissionListStatus.textContent = "Saving discharge...";
   admissionListStatus.classList.remove("error");
   try {
-    const response = await fetch(
-      `/api/v1/patients/${selectedAdmissionPatient.id}/admissions/${selectedAdmissionId}/discharge`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(Object.fromEntries(new FormData(dischargeForm)))
-      });
+    const response = await fetch(`/api/v1/patients/${selectedAdmissionPatient.id}/admissions/${selectedAdmissionId}/discharge`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(Object.fromEntries(new FormData(dischargeForm)))
+    });
     if (!response.ok) throw await readApiError(response, "Could not discharge admission.");
     dischargeForm.reset();
     cancelDischarge();
@@ -155,10 +223,23 @@ dischargeForm.addEventListener("submit", async (event) => {
   }
 });
 
-cancelDischargeButton.addEventListener("click", cancelDischarge);
-
+document.querySelectorAll("[data-view]").forEach((button) => {
+  button.addEventListener("click", () => showView(button.dataset.view));
+});
+document.querySelectorAll("[data-view-target]").forEach((button) => {
+  button.addEventListener("click", () => showView(button.dataset.viewTarget));
+});
+document.querySelectorAll("[data-view-link]").forEach((link) => {
+  link.addEventListener("click", (event) => {
+    event.preventDefault();
+    showView(link.dataset.viewLink);
+  });
+});
+mobileMenuButton.addEventListener("click", () => sidebar.classList.toggle("open"));
 document.querySelector("#refresh-button").addEventListener("click", loadPatients);
 cancelButton.addEventListener("click", endEdit);
+cancelDischargeButton.addEventListener("click", cancelDischarge);
+
 loginForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   loginStatus.textContent = "Signing in...";
@@ -169,11 +250,8 @@ loginForm.addEventListener("submit", async (event) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(Object.fromEntries(new FormData(loginForm)))
     });
-
     if (!response.ok) throw await readApiError(response, "Invalid email or password.");
-    const user = await response.json();
-    loginStatus.textContent = `Signed in as ${user.role}.`;
-    await loadPatients();
+    openWorkspace(await response.json());
   } catch (error) {
     loginStatus.textContent = error.message;
     loginStatus.classList.add("error");
@@ -187,15 +265,11 @@ logoutButton.addEventListener("click", async () => {
     loginStatus.classList.add("error");
     return;
   }
-  loginStatus.textContent = "Signed out.";
-  listStatus.textContent = "Sign in to load patients.";
-  patientList.replaceChildren();
-  clearTriage();
-  clearAdmission();
-  endEdit();
+  closeWorkspace();
 });
 
 function beginEdit(patient) {
+  showView("patients-view");
   editingPatientId = patient.id;
   form.elements.fullName.value = patient.fullName;
   form.elements.birthDate.value = patient.birthDate;
@@ -233,11 +307,10 @@ async function deletePatient(patient) {
 
 function selectTriagePatient(patient) {
   selectedTriagePatient = patient;
-  triageSection.classList.remove("hidden");
-  triagePatient.textContent = `Patient: ${patient.fullName}`;
+  showView("triage-view");
+  triagePatient.textContent = patient.fullName;
   triageStatus.textContent = "";
   loadTriage(patient);
-  triageSection.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 async function loadTriage(patient) {
@@ -264,30 +337,23 @@ async function loadTriage(patient) {
 
 function clearTriage() {
   selectedTriagePatient = null;
-  triageSection.classList.add("hidden");
   triageForm.reset();
   triageList.replaceChildren();
-  triagePatient.textContent = "Select a patient to manage triage.";
+  triagePatient.textContent = "Choose a patient from the registry";
   triageStatus.textContent = "";
   triageListStatus.textContent = "";
 }
 
 function riskLabel(riskLevel) {
-  return ({
-    1: "Blue",
-    2: "Green",
-    3: "Yellow",
-    4: "Red"
-  }[riskLevel] || "Unknown");
+  return ({ 1: "Blue - non-urgent", 2: "Green - low risk", 3: "Yellow - needs attention", 4: "Red - emergency" }[riskLevel] || "Unknown");
 }
 
 function selectAdmissionPatient(patient) {
   selectedAdmissionPatient = patient;
-  admissionSection.classList.remove("hidden");
-  admissionPatient.textContent = `Patient: ${patient.fullName}`;
+  showView("admissions-view");
+  admissionPatient.textContent = patient.fullName;
   admissionStatus.textContent = "";
   loadAdmissions(patient);
-  admissionSection.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 async function loadAdmissions(patient) {
@@ -307,8 +373,7 @@ async function loadAdmissions(patient) {
           ? `<span>Discharged: ${new Date(admission.dischargedAtUtc).toLocaleString()}</span>
              <span>Notes: ${escapeHtml(admission.dischargeNotes)}</span>`
           : `<button class="discharge-button" type="button">Discharge</button>`}`;
-      const dischargeButton = item.querySelector(".discharge-button");
-      dischargeButton?.addEventListener("click", () => beginDischarge(admission.id));
+      item.querySelector(".discharge-button")?.addEventListener("click", () => beginDischarge(admission.id));
       admissionList.append(item);
     });
     admissionListStatus.textContent = admissions.length ? "" : "No admissions registered yet.";
@@ -332,21 +397,20 @@ function cancelDischarge() {
 
 function clearAdmission() {
   selectedAdmissionPatient = null;
-  admissionSection.classList.add("hidden");
   admissionForm.reset();
   cancelDischarge();
   admissionList.replaceChildren();
-  admissionPatient.textContent = "Select a patient to manage admission.";
+  admissionPatient.textContent = "Choose a patient from the registry";
   admissionStatus.textContent = "";
   admissionListStatus.textContent = "";
 }
 
 function admissionStatusLabel(status) {
-  return status === 1 ? "Active" : "Discharged";
+  return status === 1 ? "Active admission" : "Discharged";
 }
 
 function escapeHtml(value) {
-  return value.replace(/[&<>"']/g, (character) => ({
+  return String(value).replace(/[&<>"']/g, (character) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
   }[character]));
 }
@@ -354,10 +418,14 @@ function escapeHtml(value) {
 async function readApiError(response, fallback) {
   try {
     const problem = await response.json();
-    return new Error(problem.detail || problem.title || fallback);
+    return new Error(problem.detail || problem.title || problem.message || fallback);
   } catch {
     return new Error(fallback);
   }
 }
 
-listStatus.textContent = "Sign in to load patients.";
+topbarDate.textContent = new Intl.DateTimeFormat("en", {
+  weekday: "short",
+  month: "short",
+  day: "numeric"
+}).format(new Date());

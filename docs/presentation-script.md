@@ -34,8 +34,13 @@ business rules.
 {"status":"ok","service":"HEJCareSuite.Api"}
 ```
 
-Mention that GitHub Actions validates restore, Release build, tests, frontend
-syntax, and Docker image creation.
+Explain that `/health` is intentionally small: it is an unauthenticated
+availability probe used by the container, GitHub Actions, a load balancer, or
+an operator to confirm that the API process is reachable before testing
+authenticated workflows. It is not a clinical dashboard and does not replace
+the functional demonstration. Mention that GitHub Actions also validates
+restore, Release build, tests, frontend syntax, Docker image creation, and a
+container health smoke test.
 
 ## 4. Functional demonstration
 
