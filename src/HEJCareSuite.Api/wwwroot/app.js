@@ -429,3 +429,11 @@ topbarDate.textContent = new Intl.DateTimeFormat("en", {
   month: "short",
   day: "numeric"
 }).format(new Date());
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js").catch(() => {
+      // The application remains fully usable when offline installation is unavailable.
+    });
+  });
+}

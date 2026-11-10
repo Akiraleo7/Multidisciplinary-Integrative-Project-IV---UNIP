@@ -69,13 +69,16 @@ A modular hospital platform that unifies clinical and administrative processes w
 - Emergency triage and risk classification
 - Hospital admission, bed allocation, history, and discharge
 - Responsive web interface served by the ASP.NET Core API
+- Mobile-responsive PWA with installable web app shell and shared REST APIs
+- VLibras accessibility widget on the web and mobile-responsive surfaces
 - REST API, audit trail, CI validation, container packaging, and deployment smoke test
 
 ### Planned Extensions
 - Complete role-based authorization and operational dashboards
 - Exam requests and results visualization
 - Prescription and medication dispensing workflow
-- Native mobile application for staff task tracking and alerts
+- Native Android/iOS application packaging remains a future extension; the
+  current deliverable is an installable responsive PWA using the same API
 
 ### Out of Scope (current semester MVP)
 - Full financial billing engine
@@ -199,8 +202,14 @@ Hospital admission and discharge are initialized with
 - `POST /api/v1/patients/{patientId}/admissions/{admissionId}/discharge`
 
 The web interface supports bed allocation, admission history, and discharge
-with mandatory notes. Exams, pharmacy, role-specific dashboards, and mobile
-client features remain planned scope and are not part of the current MVP.
+with mandatory notes. Exams, pharmacy, and role-specific dashboards remain
+planned scope and are not part of the current MVP.
+
+The current mobile deliverable is a responsive installable PWA. It includes a
+mobile navigation drawer, an application manifest, a cached application shell,
+and the same `/api/v1` contracts used by the desktop web interface. The
+official VLibras widget is loaded in the shared web shell when internet access
+is available.
 
 For SSMS evidence collection after applying schemas `001` through `005`, run the
 read-only queries in `database/006_validation_queries.sql`. The script reports
@@ -318,6 +327,8 @@ The implemented REST endpoints and request examples are documented in
 `docs/api-reference.md`.
 The report structure and evidence placeholders are maintained in
 `docs/academic-report-outline.md`.
+The detailed ABNT evidence map for Stages 4 through 8 is maintained in
+`docs/academic-stage-alignment.md`.
 
 ---
 

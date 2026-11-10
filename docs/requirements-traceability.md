@@ -23,7 +23,7 @@ Pull Requests, Codespaces, SSMS, and CI are the actual evidence sources.
 | --- | --- | --- | --- | --- |
 | NFR-01 - Secure authentication and session control | Implemented baseline | PBKDF2 password hashing; SQL `UserAccount`; HTTP-only `hejcare.auth` cookie | Authentication integration tests and login/logout walkthrough | Git/CI evidence |
 | NFR-02 - Audit trail for critical operations | Implemented baseline | `AuditLog`; SQL triggers for patients, triage, and hospitalization | SSMS queries showing audit records after CRUD operations | SSMS evidence |
-| NFR-03 - Responsive web interface and mobile usability | Partially implemented | Responsive web UI in `wwwroot`; no native mobile client | Browser validation at desktop and narrow viewport sizes | Screenshot evidence |
+| NFR-03 - Responsive web interface and mobile usability | Implemented baseline | Responsive web UI, mobile navigation drawer, installable PWA manifest, cached application shell, and shared REST APIs | Browser validation at desktop/mobile viewport and PWA installation evidence | Screenshot/PWA evidence |
 | NFR-04 - Availability suitable for hospital routine operations | Implemented baseline | Containerized application, CI build/test gate, and `GET /health` smoke endpoint | GitHub Actions build/test/container checks; deployment smoke test | CI/deploy evidence |
 | NFR-05 - Healthcare privacy-aligned data protection | Partially implemented | Secrets excluded from source; authenticated API; parameterized SQL | Deployment configuration evidence; hardening deferred | Code/config evidence |
 

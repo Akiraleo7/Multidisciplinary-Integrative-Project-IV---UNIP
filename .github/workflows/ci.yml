@@ -36,7 +36,10 @@ jobs:
         run: dotnet test HEJCareSuite.sln --configuration Release --no-build --verbosity normal
 
       - name: Validate frontend syntax
-        run: node --check src/HEJCareSuite.Api/wwwroot/app.js
+        run: |
+          node --check src/HEJCareSuite.Api/wwwroot/app.js
+          node --check src/HEJCareSuite.Api/wwwroot/sw.js
+          node -e "JSON.parse(require('fs').readFileSync('src/HEJCareSuite.Api/wwwroot/manifest.webmanifest', 'utf8'))"
 
       - name: Build deployment container
         run: docker build --tag hejcare-suite:ci .
