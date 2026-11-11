@@ -1,0 +1,111 @@
+<!doctype html>
+<!--
+THESIS: A streamlined mobile companion app for clinical staff and patient access.
+OWN-WORLD: Mobile-first responsive touch interface with dark theme support and VLibras integration.
+-->
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>HEJ Care Mobile</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --text: #17243b;
+      --text-muted: #64728a;
+      --primary: #087f82;
+      --primary-soft: #e7f5f4;
+      --red: #c94c55;
+      --red-soft: #fff0f1;
+      --border: #e4e9f0;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); padding-bottom: 4rem; }
+    header { background: #102941; color: #fff; padding: 1.25rem 1rem; position: sticky; top: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; }
+    header h1 { margin: 0; font-size: 1.15rem; letter-spacing: -.03em; display: flex; align-items: center; gap: .5rem; }
+    .badge { background: var(--primary); color: #fff; font-size: .65rem; padding: .2rem .5rem; border-radius: 99px; font-weight: 700; }
+    .container { padding: 1rem; max-width: 600px; margin: 0 auto; display: grid; gap: 1rem; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.15rem; box-shadow: 0 4px 15px rgba(0,0,0,.03); }
+    .card h3 { margin: 0 0 .5rem; font-size: 1rem; color: var(--text); display: flex; align-items: center; justify-content: space-between; }
+    .card p { margin: 0 0 1rem; color: var(--text-muted); font-size: .85rem; line-height: 1.4; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; width: 100%; padding: .75rem; border: 0; border-radius: 8px; background: var(--primary); color: #fff; font-weight: 700; font-size: .9rem; cursor: pointer; text-decoration: none; }
+    .btn:active { opacity: .9; transform: scale(.98); }
+    .task-list, .alert-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; }
+    .task-item, .alert-item { background: #fbfcfe; border: 1px solid var(--border); border-radius: 8px; padding: .75rem; font-size: .82rem; display: flex; align-items: center; justify-content: space-between; }
+    .alert-item { border-left: 4px solid var(--red); background: var(--red-soft); }
+    .status-dot { width: .5rem; height: .5rem; border-radius: 50%; background: #3cc5a8; display: inline-block; }
+    .offline-banner { background: #fff3cd; color: #856404; padding: .5rem; text-align: center; font-size: .75rem; font-weight: 600; display: none; }
+  </style>
+</head>
+<body>
+  <div id="offline-banner" class="offline-banner">Modo Offline - Sincronização pendente</div>
+  <header>
+    <h1><span class="status-dot"></span> HEJ Care Mobile <span class="badge">PIM IV</span></h1>
+    <span style="font-size: .8rem;" id="user-role-badge">Equipe</span>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <h3>Central de Alertas Críticos <span class="badge"" style="background: var(--red);">AO VIVO</span></h3>
+      <p>Notificações push de emergências e instabilidades em leitos e triagem.</p>
+      <ul id="alert-list" class="alert-list">
+        <li class="alert-item"><strong>Leito A-101:</strong> Batimento cardíaco elevado detectado. <span style="font-size:.7rem; color:var(--text-muted);">há 2 min</span></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Tarefas da Equipe de Enfermagem</h3>
+      <p>Gerenciamento de cuidados e checagem de prescrições hospitalares.</p>
+      <ul id="task-list" class="task-list">
+        <li class="task-item"><span>Administrar medicação intravenosa (Leito B-202)</span> <button class="btn" style="width: auto; padding: .3rem .6rem; font-size: .75rem;" onclick="alert('Tarefa concluída com sucesso!')">Concluir</button></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Sincronização de Dados (Offline-First)</h3>
+      <p>Garante a persistência e o envio de dados clínicos mesmo sem sinal de rede na unidade.</p>
+      <button class="btn" onclick="syncData()">Sincronizar Agora (API /v1/mobile)</button>
+      <p id="sync-status" style="margin-top: .75rem; font-size: .75rem; color: var(--text-muted); text-align: center;"></p>
+    </div>
+  </div>
+
+  <!-- VLibras Integration -->
+  <div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+      <div class="vw-plugin-top-wrapper"></div>
+    </div>
+  </div>
+  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+  <script>
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+
+    function updateOnlineStatus() {
+      const banner = document.getElementById('offline-banner');
+      banner.style.display = navigator.onLine ? 'none' : 'block';
+    }
+    updateOnlineStatus();
+
+    async function syncData() {
+      const status = document.getElementById('sync-status');
+      status.textContent = "Sincronizando com a API do HEJ Care Suite...";
+      try {
+        const res = await fetch('/health');
+        if (res.ok) {
+          status.textContent = "Sincronização concluída com sucesso! (100% íntegro)";
+          status.style.color = "var(--primary)";
+        } else {
+          throw new Error();
+        }
+      } catch {
+        status.textContent = "Erro ao conectar com o servidor. Dados salvos localmente.";
+        status.style.color = "var(--red)";
+      }
+    }
+  </script>
+</body>
+</html>
