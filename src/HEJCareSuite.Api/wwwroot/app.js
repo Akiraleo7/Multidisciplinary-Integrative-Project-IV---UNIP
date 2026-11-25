@@ -124,11 +124,72 @@ function renderPatient(patient) {
   patientList.append(item);
 }
 
+function validateDocumentNumber(documentNumber) {
+    // Remove any non-digit characters for validation
+    const digitsOnly = documentNumber.replace(/\D/g, '');
+
+    // CPF: must have exactly 11 digits
+    if (digitsOnly.length === 11) {
+        // Check if all digits are the same (invalid)
+        if (areAllDigitsSame(digitsOnly)) return false;
+
+        // Validate CPF check digits
+        let sum = 0;
+        for (let i = 0; i < 9; i++) {
+            sum += parseInt(digitsOnly.charAt(i)) * (10 - i);
+        }
+        let remainder = sum % 11;
+        let firstCheckDigit = remainder < 2 ? 0 : 11 - remainder;
+        if (firstCheckDigit !== parseInt(digitsOnly.charAt(9))) return false;
+
+        sum = 0;
+        for (let i = 0; i < 10; i++) {
+            sum += parseInt(digitsOnly.charAt(i)) * (11 - i);
+        }
+        remainder = sum % 11;
+        let secondCheckDigit = remainder < 2 ? 0 : 11 - remainder;
+        if (secondCheckDigit !== parseInt(digitsOnly.charAt(10))) return false;
+
+        return true;
+    }
+
+    // RG: must have between 7 and 9 digits
+    if (digitsOnly.length >= 7 && digitsOnly.length <= 9) {
+        return true; // RG format is accepted within this range
+    }
+
+    return false;
+}
+
+String.prototype.allDigitsSame = function() {
+    return this.split('').every(digit => digit === this[0]);
+};
+
+function showToast(message) {
+  const toast = document.createElement("div");
+  toast.className = "toast-success";
+  toast.innerHTML = `<span aria-hidden="true">✓</span> ${message}`;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
+  submitButton.disabled = true;
   formStatus.textContent = "Saving patient...";
   formStatus.classList.remove("error");
+
   const data = Object.fromEntries(new FormData(form));
+  const documentNumber = data.documentNumber || '';
+
+  // Validate document number before sending
+  if (!validateDocumentNumber(documentNumber)) {
+    formStatus.textContent = "Invalid document number. CPF must have 11 digits with valid check digits, or RG must have 7-9 digits.";
+    formStatus.classList.add("error");
+    submitButton.disabled = false;
+    return;
+  }
+
   try {
     const response = await fetch(
       editingPatientId ? `/api/v1/patients/${editingPatientId}` : "/api/v1/patients",
@@ -139,12 +200,15 @@ form.addEventListener("submit", async (event) => {
       });
     if (!response.ok) throw await readApiError(response, "Could not save patient.");
     form.reset();
-    formStatus.textContent = editingPatientId ? "Patient updated." : "Patient registered.";
+    formStatus.textContent = "";
+    showToast(editingPatientId ? "Patient updated." : "Patient registered.");
     endEdit();
     await loadPatients();
   } catch (error) {
     formStatus.textContent = error.message;
     formStatus.classList.add("error");
+  } finally {
+    submitButton.disabled = false;
   }
 });
 
