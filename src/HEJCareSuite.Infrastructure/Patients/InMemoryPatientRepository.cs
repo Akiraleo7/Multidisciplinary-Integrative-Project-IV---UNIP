@@ -21,6 +21,16 @@ public sealed class InMemoryPatientRepository : IPatientRepository
         return Task.FromResult<IReadOnlyCollection<Patient>>(patients.Values.ToArray());
     }
 
+    public Task<bool> ExistsWithDocumentAsync(string documentNumber, Guid? excludePatientId, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        var exists = patients.Values.Any(p =>
+            p.DocumentNumber.Equals(documentNumber.Trim(), StringComparison.OrdinalIgnoreCase) &&
+            (!excludePatientId.HasValue || p.Id != excludePatientId.Value));
+
+        return Task.FromResult(exists);
+    }
+
     public Task<bool> UpdateAsync(
         Guid patientId,
         string fullName,

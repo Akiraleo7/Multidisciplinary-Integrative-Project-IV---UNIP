@@ -84,6 +84,26 @@ public sealed class SqlPatientRepository(string connectionString) : IPatientRepo
         return await command.ExecuteNonQueryAsync(cancellationToken) > 0;
     }
 
+    public async Task<bool> ExistsWithDocumentAsync(string documentNumber, Guid? excludePatientId, CancellationToken cancellationToken)
+    {
+        await using var connection = new SqlConnection(connectionString);
+        await connection.OpenAsync(cancellationToken);
+
+        var commandText = excludePatientId.HasValue
+            ? "SELECT COUNT(1) FROM dbo.Patient WHERE DocumentNumber = @DocumentNumber AND PatientId <> @PatientId"
+            : "SELECT COUNT(1) FROM dbo.Patient WHERE DocumentNumber = @DocumentNumber";
+
+        await using var command = new SqlCommand(commandText, connection);
+        command.Parameters.AddWithValue("@DocumentNumber", documentNumber);
+        if (excludePatientId.HasValue)
+        {
+            command.Parameters.AddWithValue("@PatientId", excludePatientId.Value);
+        }
+
+        var result = await command.ExecuteScalarAsync(cancellationToken);
+        return (int)result! > 0;
+    }
+
     public async Task<bool> DeleteAsync(Guid patientId, CancellationToken cancellationToken)
     {
         await using var connection = new SqlConnection(connectionString);
