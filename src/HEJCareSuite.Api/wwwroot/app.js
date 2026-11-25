@@ -44,7 +44,10 @@ const viewLabels = {
   "dashboard-view": "Overview",
   "patients-view": "Patients",
   "triage-view": "Emergency triage",
-  "admissions-view": "Beds & admissions"
+  "admissions-view": "Beds & admissions",
+  admission: "Admission",
+
+  admission: "Internação",
 };
 
 function showView(viewId) {
