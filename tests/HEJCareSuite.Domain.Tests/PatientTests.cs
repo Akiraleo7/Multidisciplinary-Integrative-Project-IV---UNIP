@@ -11,12 +11,12 @@ public sealed class PatientTests
         var birthDate = new DateOnly(1990, 5, 20);
 
         // Act
-        var patient = new Patient("  Maria Silva  ", birthDate, " 12345678900 ");
+        var patient = new Patient("  Maria Silva  ", birthDate, " 12345678909 ");
 
         // Assert
         Assert.NotEqual(Guid.Empty, patient.Id);
         Assert.Equal("Maria Silva", patient.FullName);
-        Assert.Equal("12345678900", patient.DocumentNumber);
+        Assert.Equal("12345678909", patient.DocumentNumber);
         Assert.Equal(birthDate, patient.BirthDate);
         Assert.NotEqual(default, patient.CreatedAtUtc);
     }
@@ -28,7 +28,7 @@ public sealed class PatientTests
         var birthDate = new DateOnly(1990, 5, 20);
 
         // Act
-        var action = () => new Patient(" ", birthDate, "12345678900");
+        var action = () => new Patient(" ", birthDate, "12345678909");
 
         // Assert
         Assert.Throws<ArgumentException>(action);

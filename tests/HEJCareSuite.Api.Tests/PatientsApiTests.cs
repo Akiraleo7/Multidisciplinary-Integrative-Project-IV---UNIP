@@ -43,7 +43,7 @@ public sealed class PatientsApiTests
         var request = new RegisterPatientCommand(
             "Maria Silva",
             new DateOnly(1990, 5, 20),
-            Guid.NewGuid().ToString("N"));
+            "12345678909");
 
         // Act
         var response = await client.PostAsJsonAsync("/api/v1/patients", request);
@@ -67,7 +67,7 @@ public sealed class PatientsApiTests
         var expectedPatient = new Patient(
             "Joao Souza",
             new DateOnly(1985, 10, 12),
-            Guid.NewGuid().ToString("N"));
+            "52998224725");
         factory.Repository.Add(expectedPatient);
 
         // Act
@@ -92,7 +92,7 @@ public sealed class PatientsApiTests
         var request = new RegisterPatientRequest(
             " ",
             new DateOnly(1990, 5, 20),
-            Guid.NewGuid().ToString("N"));
+            "11144477735");
 
         // Act
         var response = await client.PostAsJsonAsync("/api/v1/patients", request);
@@ -109,13 +109,13 @@ public sealed class PatientsApiTests
     {
         using var factory = new PatientsApiFactory();
         using var client = factory.CreateClient();
-        var patient = new Patient("Maria Silva", new DateOnly(1990, 5, 20), "old-document");
+        var patient = new Patient("Maria Silva", new DateOnly(1990, 5, 20), "12345678909");
         factory.Repository.Add(patient);
 
         var request = new RegisterPatientRequest(
             "Maria Santos",
             new DateOnly(1991, 6, 21),
-            "new-document");
+            "52998224725");
 
         var response = await client.PutAsJsonAsync($"/api/v1/patients/{patient.Id}", request);
 
@@ -131,7 +131,7 @@ public sealed class PatientsApiTests
     {
         using var factory = new PatientsApiFactory();
         using var client = factory.CreateClient();
-        var patient = new Patient("Maria Silva", new DateOnly(1990, 5, 20), "delete-document");
+        var patient = new Patient("Maria Silva", new DateOnly(1990, 5, 20), "39053344705");
         factory.Repository.Add(patient);
 
         var response = await client.DeleteAsync($"/api/v1/patients/{patient.Id}");
@@ -257,6 +257,21 @@ public sealed class InMemoryPatientRepository : IPatientRepository
         lock (syncRoot)
         {
             return Task.FromResult<IReadOnlyCollection<Patient>>(patients.ToArray());
+        }
+    }
+
+    public Task<bool> ExistsWithDocumentAsync(
+        string documentNumber,
+        Guid? excludedPatientId,
+        CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        lock (syncRoot)
+        {
+            var exists = patients.Any(patient =>
+                (!excludedPatientId.HasValue || patient.Id != excludedPatientId.Value) &&
+                string.Equals(patient.DocumentNumber, documentNumber, StringComparison.OrdinalIgnoreCase));
+            return Task.FromResult(exists);
         }
     }
 }
