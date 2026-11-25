@@ -180,7 +180,13 @@ FORM: Operate mode; sidebar workspace with dedicated task views, selected to red
               <div class="panel-heading"><div><h3 id="form-title">Register patient</h3><p>Keep identity data complete and accurate.</p></div><span class="panel-step">01</span></div>
               <label>Full name<input name="fullName" required maxlength="200" autocomplete="name"></label>
               <label>Birth date<input name="birthDate" type="date" required></label>
-              <label>Document number<input name="documentNumber" required maxlength="40"></label>
+              <label>Document type
+                <select name="documentType" id="documentType">
+                  <option value="CPF">CPF</option>
+                  <option value="RG">RG</option>
+                </select>
+              </label>
+              <label>Document number<input name="documentNumber" id="documentNumber" required maxlength="40"></label>
               <div class="form-actions"><button id="submit-button" class="button button-primary" type="submit">Save patient</button><button id="cancel-button" class="button button-secondary hidden" type="button">Cancel edit</button></div>
               <p id="form-status" class="status" role="status"></p>
             </form>
