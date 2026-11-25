@@ -13,4 +13,5 @@ public interface IPatientRepository
         CancellationToken cancellationToken);
     Task<bool> DeleteAsync(Guid patientId, CancellationToken cancellationToken);
     Task<IReadOnlyCollection<Patient>> ListAsync(CancellationToken cancellationToken);
+    Task<bool> ExistsWithDocumentAsync(string documentNumber, Guid? excludePatientId, CancellationToken cancellationToken);
 }

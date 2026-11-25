@@ -44,7 +44,10 @@ const viewLabels = {
   "dashboard-view": "Overview",
   "patients-view": "Patients",
   "triage-view": "Emergency triage",
-  "admissions-view": "Beds & admissions"
+  "admissions-view": "Beds & admissions",
+  admission: "Admission",
+
+  admission: "Internação",
 };
 
 function showView(viewId) {
@@ -161,9 +164,10 @@ function validateDocumentNumber(documentNumber) {
     return false;
 }
 
-String.prototype.allDigitsSame = function() {
-    return this.split('').every(digit => digit === this[0]);
-};
+
+function areAllDigitsSame(str) {
+    return str.split('').every(function(digit) { return digit === str[0]; });
+}
 
 function showToast(message) {
   const toast = document.createElement("div");
@@ -173,6 +177,34 @@ function showToast(message) {
   setTimeout(() => toast.remove(), 3000);
 }
 
+function validateDocumentNumber(documentNumber, type) {
+    const digitsOnly = documentNumber.replace(/\D/g, '');
+
+    if (type === 'CPF') {
+        if (digitsOnly.length !== 11 || areAllDigitsSame(digitsOnly)) return false;
+
+        let sum = 0;
+        for (let i = 0; i < 9; i++) sum += parseInt(digitsOnly.charAt(i)) * (10 - i);
+        let remainder = sum % 11;
+        let d1 = remainder < 2 ? 0 : 11 - remainder;
+        if (d1 !== parseInt(digitsOnly.charAt(9))) return false;
+
+        sum = 0;
+        for (let i = 0; i < 10; i++) sum += parseInt(digitsOnly.charAt(i)) * (11 - i);
+        remainder = sum % 11;
+        let d2 = remainder < 2 ? 0 : 11 - remainder;
+        if (d2 !== parseInt(digitsOnly.charAt(10))) return false;
+
+        return true;
+    }
+
+    if (type === 'RG') {
+        return digitsOnly.length >= 7 && digitsOnly.length <= 9;
+    }
+
+    return false;
+}
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   submitButton.disabled = true;
@@ -180,11 +212,10 @@ form.addEventListener("submit", async (event) => {
   formStatus.classList.remove("error");
 
   const data = Object.fromEntries(new FormData(form));
-  const documentNumber = data.documentNumber || '';
 
-  // Validate document number before sending
-  if (!validateDocumentNumber(documentNumber)) {
-    formStatus.textContent = "Invalid document number. CPF must have 11 digits with valid check digits, or RG must have 7-9 digits.";
+  // Validate document number based on chosen document type
+  if (!validateDocumentNumber(data.documentNumber, data.documentType)) {
+    formStatus.textContent = `Invalid ${data.documentType} number format or check digits.`;
     formStatus.classList.add("error");
     submitButton.disabled = false;
     return;
@@ -198,7 +229,11 @@ form.addEventListener("submit", async (event) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
       });
-    if (!response.ok) throw await readApiError(response, "Could not save patient.");
+
+    if (!response.ok) {
+        throw await readApiError(response, "Could not save patient.");
+    }
+
     form.reset();
     formStatus.textContent = "";
     showToast(editingPatientId ? "Patient updated." : "Patient registered.");

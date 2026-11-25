@@ -14,7 +14,7 @@ public sealed class RegisterPatientTests
         var command = new RegisterPatientCommand(
             "Maria Silva",
             new DateOnly(1990, 5, 20),
-            "12345678900");
+            "12345678909");
 
         // Act
         var patient = await useCase.ExecuteAsync(command, CancellationToken.None);
@@ -36,7 +36,7 @@ public sealed class RegisterPatientTests
         var command = new RegisterPatientCommand(
             "",
             new DateOnly(1990, 5, 20),
-            "12345678900");
+            "12345678909");
 
         // Act
         var action = () => useCase.ExecuteAsync(command, CancellationToken.None);
@@ -46,7 +46,7 @@ public sealed class RegisterPatientTests
         Assert.Empty(await repository.ListAsync(CancellationToken.None));
     }
 
-    private sealed class InMemoryPatientRepository : IPatientRepository
+        private sealed class InMemoryPatientRepository : IPatientRepository
     {
         private readonly List<Patient> patients = [];
 
@@ -84,6 +84,18 @@ public sealed class RegisterPatientTests
         {
             cancellationToken.ThrowIfCancellationRequested();
             return Task.FromResult<IReadOnlyCollection<Patient>>(patients);
+        }
+
+        public Task<bool> ExistsWithDocumentAsync(
+            string documentNumber,
+            Guid? excludedPatientId,
+            CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var exists = patients.Any(patient =>
+                patient.Id != excludedPatientId &&
+                string.Equals(patient.DocumentNumber, documentNumber, StringComparison.OrdinalIgnoreCase));
+            return Task.FromResult(exists);
         }
     }
 }

@@ -12,10 +12,16 @@ public sealed class UpdatePatient(IPatientRepository patientRepository)
         UpdatePatientCommand command,
         CancellationToken cancellationToken)
     {
+        string trimmedDoc = command.DocumentNumber?.Trim() ?? string.Empty;
+        if (await patientRepository.ExistsWithDocumentAsync(trimmedDoc, command.PatientId, cancellationToken))
+        {
+            throw new ArgumentException("A patient with this document number is already registered.", nameof(command.DocumentNumber));
+        }
+
         var validatedPatient = new Domain.Entities.Patient(
             command.FullName,
             command.BirthDate,
-            command.DocumentNumber);
+            command.DocumentNumber ?? string.Empty);
 
         return await patientRepository.UpdateAsync(
             command.PatientId,
