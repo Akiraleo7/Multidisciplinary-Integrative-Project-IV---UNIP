@@ -50,6 +50,15 @@ const viewLabels = {
   admission: "Internação",
 };
 
+function formatBrasiliaDateTime(utcValue) {
+  if (!utcValue) return "-";
+  const raw = String(utcValue).trim();
+  const utcString = raw.endsWith("Z") || raw.includes("+") ? raw : `${raw}Z`;
+  return new Date(utcString).toLocaleString("pt-BR", {
+    timeZone: "America/Sao_Paulo"
+  });
+}
+
 function showView(viewId) {
   document.querySelectorAll(".page-view").forEach((view) => {
     view.classList.toggle("hidden", view.id !== viewId);
@@ -422,9 +431,9 @@ async function loadTriage(patient) {
     triageList.replaceChildren();
     triages.forEach((triage) => {
       const item = document.createElement("li");
-      item.innerHTML = `<strong>${riskLabel(triage.riskLevel)}</strong>
+      item.innerHTML = `<strong>${riskLabel(triage.riskLevel)}</strong>     
         <span>${escapeHtml(triage.chiefComplaint)}</span>
-        <span>${new Date(triage.recordedAtUtc).toLocaleString()}</span>`;
+        <span>${formatBrasiliaDateTime(triage.recordedAtUtc)}</span>`;
       triageList.append(item);
     });
     triageListStatus.textContent = triages.length ? "" : "No triage records yet.";
@@ -467,9 +476,9 @@ async function loadAdmissions(patient) {
       const item = document.createElement("li");
       item.innerHTML = `<strong>${admissionStatusLabel(admission.status)}</strong>
         <span>Bed: ${escapeHtml(admission.bedNumber)}</span>
-        <span>Admitted: ${new Date(admission.admittedAtUtc).toLocaleString()}</span>
+        <span>Admitted: ${formatBrasiliaDateTime(admission.admittedAtUtc)}</span>
         ${admission.dischargedAtUtc
-          ? `<span>Discharged: ${new Date(admission.dischargedAtUtc).toLocaleString()}</span>
+          ? `<span>Discharged: ${formatBrasiliaDateTime(admission.dischargedAtUtc)}</span>
              <span>Notes: ${escapeHtml(admission.dischargeNotes)}</span>`
           : `<button class="discharge-button" type="button">Discharge</button>`}`;
       item.querySelector(".discharge-button")?.addEventListener("click", () => beginDischarge(admission.id));
@@ -524,6 +533,7 @@ async function readApiError(response, fallback) {
 }
 
 topbarDate.textContent = new Intl.DateTimeFormat("en", {
+  timeZone: "America/Sao_Paulo",
   weekday: "short",
   month: "short",
   day: "numeric"
